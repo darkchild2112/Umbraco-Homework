@@ -34,9 +34,6 @@ export default {
     },
     methods: {
 
-        updateConsole(value) {
-            console.log(value)
-        },
         submitEntry(e) {
 
             e.preventDefault();

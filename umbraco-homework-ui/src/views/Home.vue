@@ -9,7 +9,9 @@
 
     <div v-if="this.formState === 'submitted'">
       <p>Thank you for submitting the form</p>
-      <button v-on:click="tryGain">Try again</button>
+      <template v-if="submissions < config.maxSubmissions">
+        <button v-on:click="tryAgain">Try again</button>
+      </template>
     </div>
   </div>
 </template>
@@ -29,6 +31,7 @@ export default {
     return {
         submissions: 0,
         formState: 'initial',
+        config: null,
         validationRules: {
           firstName: [{ regex: '\\S', message: 'first name is mandatory' }],
           lastName: [{ regex: '\\S', message: 'last name is mandatory' }],
@@ -54,10 +57,17 @@ export default {
         console.log(entry);
       },
 
-      tryGain()
+      tryAgain()
       {
         this.formState = 'initial';
       }
+  },
+  mounted(){
+      
+      fetch('https://localhost:5001/Config')
+        .then(response => response.json())
+        .then(data => this.config = data)
+        .catch(err => console.log(err));
   }
 }
 

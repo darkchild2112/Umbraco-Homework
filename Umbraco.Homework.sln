@@ -1,0 +1,29 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Umbraco.Homework.API", "Umbraco.Homework.API\Umbraco.Homework.API.csproj", "{0B351DB5-2BAC-403D-B4EE-4128F1C59B1F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Umbraco.Homework.Services", "Umbraco.Homework.Services\Umbraco.Homework.Services.csproj", "{D1873078-4690-408D-991E-F022861953EB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Umbraco.Homework.Model", "Umbraco.Homework.Model\Umbraco.Homework.Model.csproj", "{8D852185-E74C-4B83-A25C-BC564EE2A5E4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0B351DB5-2BAC-403D-B4EE-4128F1C59B1F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B351DB5-2BAC-403D-B4EE-4128F1C59B1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B351DB5-2BAC-403D-B4EE-4128F1C59B1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B351DB5-2BAC-403D-B4EE-4128F1C59B1F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1873078-4690-408D-991E-F022861953EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1873078-4690-408D-991E-F022861953EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1873078-4690-408D-991E-F022861953EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1873078-4690-408D-991E-F022861953EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D852185-E74C-4B83-A25C-BC564EE2A5E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D852185-E74C-4B83-A25C-BC564EE2A5E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D852185-E74C-4B83-A25C-BC564EE2A5E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D852185-E74C-4B83-A25C-BC564EE2A5E4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
