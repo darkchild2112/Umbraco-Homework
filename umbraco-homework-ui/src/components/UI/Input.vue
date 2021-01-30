@@ -49,7 +49,7 @@ export default {
 
                     if(this.isValid === false){
                         
-                        this.errorMsg = this.validationRules[rule].message;
+                        this.errorMsg = this.validationRules[rule].errorMessage;
                         break;
                     }
                 }

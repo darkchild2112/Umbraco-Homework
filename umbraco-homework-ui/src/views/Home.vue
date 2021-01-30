@@ -33,10 +33,10 @@ export default {
         formState: 'initial',
         config: null,
         validationRules: {
-          firstName: [{ regex: '\\S', message: 'first name is mandatory' }],
-          lastName: [{ regex: '\\S', message: 'last name is mandatory' }],
-          email: [{ regex: '\\S', message: 'email is mandatory' }, { regex: "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:.[a-zA-Z0-9-]+)*$", message: 'email needs to be in the format xxx@sss.xxx' }],
-          serialNumber: [{ regex: '\\S', message: 'serial number is mandatory' }]
+          firstNameRules: null,
+          lastNameRules: null,
+          emailRules:  null,
+          serialNumberRules: null
         }
     }
   },
@@ -66,7 +66,13 @@ export default {
       
       fetch('https://localhost:5001/Config')
         .then(response => response.json())
-        .then(data => this.config = data)
+        .then(data => {
+
+          console.log(data);
+          
+          this.config = data;
+          this.validationRules = data.validation;
+        })
         .catch(err => console.log(err));
   }
 }

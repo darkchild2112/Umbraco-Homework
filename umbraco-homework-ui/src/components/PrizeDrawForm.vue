@@ -1,10 +1,10 @@
 <template>
     <div>
         <form @submit="submitEntry">
-            <Input v-model="firstName" ph="First t Name..." id="firstName" label="First Name" :validationRules="validationRules.firstName" />
-            <Input v-model="lastName" id="lastName" ph="Last Name..." label="Last Name" :validationRules="validationRules.lastName"/>
-            <Input v-model="email" id="email" ph="Email..." label="Email" :validationRules="validationRules.email"/>
-            <Input v-model="serialNumber" id="serialNumber" ph="Serial Number..." label="Serial Number" :validationRules="validationRules.serialNumber"/>
+            <Input v-model="firstName" ph="First t Name..." id="firstName" label="First Name" :validationRules="validationRules.firstNameRules" />
+            <Input v-model="lastName" id="lastName" ph="Last Name..." label="Last Name" :validationRules="validationRules.lastNameRules"/>
+            <Input v-model="email" id="email" ph="Email..." label="Email" :validationRules="validationRules.emailRules"/>
+            <Input v-model="serialNumber" id="serialNumber" ph="Serial Number..." label="Serial Number" :validationRules="validationRules.serialNumberRules"/>
 
             <input type="submit" value="submit" :disabled="!formIsValid" />
         </form>
