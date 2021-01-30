@@ -1,6 +1,7 @@
 <template>
   <div>
     <Header />
+
     <PrizeDrawForm 
       v-if="this.formState === 'initial'" 
       v-bind:validationRules="this.validationRules"
@@ -29,15 +30,20 @@ export default {
         submissions: 0,
         formState: 'initial',
         validationRules: {
-          firstName: [{ regex: /\S/, message: 'first name is mandatory' }],
-          lastName: [{ regex: /\S/, message: 'last name is mandatory' }],
-          email: [{ regex: /\S/, message: 'email is mandatory' }],
-          serialNumber: [{ regex: /\S/, message: 'serial number is mandatory' }]
+          firstName: [{ regex: '\\S', message: 'first name is mandatory' }],
+          lastName: [{ regex: '\\S', message: 'last name is mandatory' }],
+          email: [{ regex: '\\S', message: 'email is mandatory' }, { regex: "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:.[a-zA-Z0-9-]+)*$", message: 'email needs to be in the format xxx@sss.xxx' }],
+          serialNumber: [{ regex: '\\S', message: 'serial number is mandatory' }]
         }
     }
   },
   methods: {
 
+      updateInput(event) {
+
+        console.log(event);
+        this.formState = event;
+      },
       successfulPrizeDrawSubmit(entry) {
 
         this.submissions = this.submissions += 1;
