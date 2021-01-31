@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Umbraco.Homework.Model
+namespace Umbraco.Homework.API.Models
 {
     public class PrizeDrawValidation
     {

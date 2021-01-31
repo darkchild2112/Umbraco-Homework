@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using Umbraco.Homework.Model;
+using Umbraco.Homework.API.Models;
 
-namespace Umbraco.Homework.Services
+namespace Umbraco.Homework.API.Services
 {
     public class ConfigService : IConfigService
     {
+        public ConfigService()
+        {
+
+        }
+
         // Temp hard coded for now
         public Config GetConfig()
         {

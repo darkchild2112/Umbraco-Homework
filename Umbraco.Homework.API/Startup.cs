@@ -11,14 +11,15 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using Umbraco.Homework.Services;
+
+using Microsoft.EntityFrameworkCore;
+using Umbraco.Homework.API.Data;
+using Umbraco.Homework.API.Services;
 
 namespace Umbraco.Homework.API
 {
     public class Startup
     {
-        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
-
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -29,18 +30,6 @@ namespace Umbraco.Homework.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            /*
-            services.AddCors(options =>
-            {
-                options.AddDefaultPolicy(
-                    builder =>
-                    {
-                        builder.WithOrigins("http://localhost:8080");
-                    });
-            });
-            */
-
-
             services.AddControllers();
 
             services.AddSwaggerGen(swagger =>
@@ -48,7 +37,20 @@ namespace Umbraco.Homework.API
                 swagger.SwaggerDoc("v1", new OpenApiInfo { Title = "Umbraco Homework API" });
             });
 
-            services.AddSingleton<IConfigService>(new ConfigService());
+            services.AddDbContext<PrizeDrawDbContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("Default")));
+
+            services.AddScoped<IPrizeDrawService, PrizeDrawService>();
+            services.AddScoped<ISerialNumberService, SerialNumberService>();
+
+            /*
+            _serviceCollection.AddSingleton<IService>(x =>
+                new Service(x.GetRequiredService<IOtherService>(),
+                            x.GetRequiredService<IAnotherOne>(),
+                            ""));
+            */
+
+            services.AddScoped<IConfigService, ConfigService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

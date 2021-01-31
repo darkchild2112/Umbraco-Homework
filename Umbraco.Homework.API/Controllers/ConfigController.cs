@@ -4,8 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Umbraco.Homework.Model;
-using Umbraco.Homework.Services;
+using Umbraco.Homework.API.Models;
+using Umbraco.Homework.API.Services;
 
 namespace Umbraco.Homework.API.Controllers
 {
@@ -13,13 +13,10 @@ namespace Umbraco.Homework.API.Controllers
     [Route("[controller]")]
     public class ConfigController : ControllerBase
     {
-        private readonly ILogger<ConfigController> _logger;
-
         private readonly IConfigService _configService;
 
-        public ConfigController(ILogger<ConfigController> logger, IConfigService configService)
+        public ConfigController(IConfigService configService)
         {
-            _logger = logger;
             _configService = configService;
         }
 

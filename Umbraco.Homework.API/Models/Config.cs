@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Umbraco.Homework.Model
+namespace Umbraco.Homework.API.Models
 {
     public class Config
     {

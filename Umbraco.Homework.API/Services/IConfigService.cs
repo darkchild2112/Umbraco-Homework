@@ -1,7 +1,7 @@
 ﻿using System;
-using Umbraco.Homework.Model;
+using Umbraco.Homework.API.Models;
 
-namespace Umbraco.Homework.Services
+namespace Umbraco.Homework.API.Services
 {
     public interface IConfigService
     {
