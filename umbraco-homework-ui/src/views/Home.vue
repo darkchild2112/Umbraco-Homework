@@ -49,12 +49,26 @@ export default {
       },
       successfulPrizeDrawSubmit(entry) {
 
-        this.submissions = this.submissions += 1;
-        this.formState = 'submitted';
+        const options = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(entry),
+        };
 
-        console.log('prize draw successfully submitted');
-        console.log(`successfully submitted ${this.submissions} times`);
-        console.log(entry);
+        fetch('https://localhost:5001/PrizeDraw/post', options)
+        .then(data => {
+          console.log('Success:', data);
+
+          this.submissions = this.submissions += 1;
+          this.formState = 'submitted';
+
+          console.log('prize draw successfully submitted');
+          console.log(`successfully submitted ${this.submissions} times`);
+          console.log(entry);
+        })
+        .catch(error => console.log('Error:', error));
       },
 
       tryAgain()
@@ -69,7 +83,7 @@ export default {
         .then(data => {
 
           console.log(data);
-          
+
           this.config = data;
           this.validationRules = data.validation;
         })

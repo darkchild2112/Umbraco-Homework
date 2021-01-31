@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Umbraco.Homework.Model;
 
 namespace Umbraco.Homework.API.Controllers
 {
@@ -18,10 +19,18 @@ namespace Umbraco.Homework.API.Controllers
             _logger = logger;
         }
 
-        [HttpGet]
-        public async Task<IEnumerable<String>> GetAll()
+        [HttpGet("getAll")]
+        public ActionResult<IEnumerable<String>> GetAll()
         {
             return new List<String> { "SubmissionOne", "SubmissionTwo" };
+        }
+
+        [HttpPost("post")]
+        public IActionResult Post(PrizeDrawEntry entry)
+        {
+
+
+            return Ok();
         }
     }
 }
