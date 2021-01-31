@@ -22,7 +22,7 @@ namespace Umbraco.Homework.API.Services
                 SerialNumber sNumber = new SerialNumber
                 {
                     Code = Guid.NewGuid().ToString(),
-                    ValidUnitl = DateTime.Now.AddDays(10)
+                    ValidUnitl = DateTime.Now.AddMinutes(10)
                 };
 
                 sNumbers.Add(sNumber);

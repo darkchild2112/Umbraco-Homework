@@ -35,17 +35,15 @@ namespace Umbraco.Homework.API.Controllers
         [HttpPost("post")]
         public async Task<IActionResult> Post([FromBody] PrizeDrawEntry entry)
         {
-            // return new JsonResult("Serial Number was not valid")
-
             try
             {
                 await _prizeDrawService.Create(entry);
 
                 return Ok();
             }
-            catch(InvalidSerialNumberException)
+            catch(InvalidUserInputException ex)
             {
-                return BadRequest(new JsonResult("Invalid Serial Number"));
+                return BadRequest(new JsonResult(new { Message = "Invalid User Input", Errors = ex.Errors }));
             }
         }
     }

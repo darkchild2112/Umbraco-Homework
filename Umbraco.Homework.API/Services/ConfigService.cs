@@ -34,6 +34,7 @@ namespace Umbraco.Homework.API.Services
                 },
                 SerialNumberRules = new List<ValidationRule> {
                     new ValidationRule { Regex = @"\S", ErrorMessage= "serial number is mandatory" },
+                    new ValidationRule { Regex = "(?im)^[{(]?[0-9A-F]{8}[-]?(?:[0-9A-F]{4}[-]?){3}[0-9A-F]{12}[)}]?$", ErrorMessage="Serial Number is invalid"}
                 }
             };
         }
