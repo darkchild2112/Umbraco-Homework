@@ -7,8 +7,8 @@ namespace Umbraco.Homework.API.Services
 {
     public interface IPrizeDrawService
     {
-        IEnumerable<PrizeDrawEntry> GetAll();
+        IEnumerable<PrizeDrawEntry> GetAllEntries();
 
-        Task<PrizeDrawEntry> Create(PrizeDrawEntry entry);
+        Task<PrizeDrawEntry> SubmitEntry(PrizeDrawEntry entry);
     }
 }

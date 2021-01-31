@@ -19,21 +19,21 @@ namespace Umbraco.Homework.API.Controllers
             _serialNumberService = serialNumberService;
         }
 
-        [HttpGet("GetAllValid")]
-        public IActionResult GetAllValid() => new JsonResult(this._serialNumberService.GetAllValidSerialNumbers().Select(e => e.Code));
+        [HttpGet("GetAllCurrentValidSerialNumbers")]
+        public IActionResult GetAllCurrentValidSerialNumbers() => new JsonResult(this._serialNumberService.GetAllCurrentValidSerialNumbers().Select(e => e.Code));
 
-        [HttpGet("validate")]
-        public IActionResult Validate(String serialNumber) => new JsonResult(this._serialNumberService.ValidateSerialNumber(serialNumber));
+        [HttpGet("ValidateSerialNumber")]
+        public IActionResult ValidateSerialNumber(String serialNumber) => new JsonResult(this._serialNumberService.ValidateSerialNumber(serialNumber));
 
-        [HttpGet("create")]
-        public async Task<ActionResult> Create(Int32 howMany)
+        [HttpGet("GenerateSerialNumberRange")]
+        public async Task<ActionResult> GenerateSerialNumberRange(Int32 howMany)
         {
             if(howMany < 1)
             {
                 return new JsonResult("The number of serial numbers to create must be more than 0");
             }
 
-            return new JsonResult(await this._serialNumberService.CreateRange(howMany));
+            return new JsonResult(await this._serialNumberService.GenerateSerialNumberRange(howMany));
         }
     }
 }

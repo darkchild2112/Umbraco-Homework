@@ -21,9 +21,9 @@ namespace Umbraco.Homework.API.Services
             this._configService = configService;
         }
 
-        public IEnumerable<PrizeDrawEntry> GetAll() => base._dataAccess.PrizeDrawEntries;
+        public IEnumerable<PrizeDrawEntry> GetAllEntries() => base._dataAccess.PrizeDrawEntries;
 
-        public async Task<PrizeDrawEntry> Create(PrizeDrawEntry entry)
+        public async Task<PrizeDrawEntry> SubmitEntry(PrizeDrawEntry entry)
         {
             _ = entry ?? throw new NullReferenceException($"{nameof(PrizeDrawEntry)} must not be null");
 

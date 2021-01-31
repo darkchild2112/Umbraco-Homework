@@ -7,10 +7,10 @@ namespace Umbraco.Homework.API.Services
 {
     public interface ISerialNumberService
     {
-        Task<IEnumerable<SerialNumber>> CreateRange(Int32 nToCreate);
+        Task<IEnumerable<SerialNumber>> GenerateSerialNumberRange(Int32 nToCreate);
 
         Boolean ValidateSerialNumber(String serialNumber);
 
-        IEnumerable<SerialNumber> GetAllValidSerialNumbers();
+        IEnumerable<SerialNumber> GetAllCurrentValidSerialNumbers();
     }
 }

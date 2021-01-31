@@ -22,22 +22,22 @@ namespace Umbraco.Homework.API.Controllers
             _prizeDrawService = prizeDrawService;
         }
 
-        [HttpGet("getAll")]
-        public IActionResult GetAll()
+        [HttpGet("GetAllEntries")]
+        public IActionResult GetAllEntries()
         { 
-            return Ok(_prizeDrawService.GetAll());
+            return Ok(_prizeDrawService.GetAllEntries());
         }
 
         // TODO: Create a method to validate the serial number
 
         // TODO: create a method to generated the serial numbers which have an expiry date
 
-        [HttpPost("post")]
-        public async Task<IActionResult> Post([FromBody] PrizeDrawEntry entry)
+        [HttpPost("SubmitEntry")]
+        public async Task<IActionResult> SubmitEntry([FromBody] PrizeDrawEntry entry)
         {
             try
             {
-                await _prizeDrawService.Create(entry);
+                await _prizeDrawService.SubmitEntry(entry);
 
                 return Ok();
             }

@@ -13,7 +13,7 @@ namespace Umbraco.Homework.API.Services
         {
         }
 
-        public async Task<IEnumerable<SerialNumber>> CreateRange(Int32 nToCreate)
+        public async Task<IEnumerable<SerialNumber>> GenerateSerialNumberRange(Int32 nToCreate)
         {
             List<SerialNumber> sNumbers = new List<SerialNumber>();
 
@@ -51,6 +51,6 @@ namespace Umbraco.Homework.API.Services
             return valid;
         }
 
-        public IEnumerable<SerialNumber> GetAllValidSerialNumbers() => this._dataAccess.SerialNumbers.Where(e => e.ValidUnitl > DateTime.Now);
+        public IEnumerable<SerialNumber> GetAllCurrentValidSerialNumbers() => this._dataAccess.SerialNumbers.Where(e => e.ValidUnitl > DateTime.Now);
     }
 }
