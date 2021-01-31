@@ -27,7 +27,6 @@ namespace Umbraco.Homework.API
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
@@ -42,13 +41,6 @@ namespace Umbraco.Homework.API
 
             services.AddScoped<IPrizeDrawService, PrizeDrawService>();
             services.AddScoped<ISerialNumberService, SerialNumberService>();
-
-            /*
-            _serviceCollection.AddSingleton<IService>(x =>
-                new Service(x.GetRequiredService<IOtherService>(),
-                            x.GetRequiredService<IAnotherOne>(),
-                            ""));
-            */
 
             services.AddScoped<IConfigService, ConfigService>();
         }
@@ -84,8 +76,6 @@ namespace Umbraco.Homework.API
             {
                 endpoints.MapControllers();
             });
-
-
         }
     }
 }

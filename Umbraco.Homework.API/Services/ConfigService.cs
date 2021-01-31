@@ -1,22 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.Extensions.Configuration;
 using Umbraco.Homework.API.Models;
 
 namespace Umbraco.Homework.API.Services
 {
     public class ConfigService : IConfigService
     {
-        public ConfigService()
-        {
+        private readonly IConfiguration _configuration;
 
+        public ConfigService(IConfiguration configuration)
+        {
+            this._configuration = configuration;
         }
 
-        // Temp hard coded for now
         public Config GetConfig()
         {
-            return new Config { MaxSubmissions = 2, Validation = this.GetValidationRules() };
+            return new Config {
+                MaxSubmissions = this._configuration.GetValue<Int32>("MaxAllowedPrizeDrawEntries"),
+                Validation = this.GetValidationRules()
+            };
         }
 
+        // TODO: These rules need to move into the confirguration file
         // TODO: The content should come from a content service
         private PrizeDrawValidation GetValidationRules()
         {
@@ -25,6 +31,7 @@ namespace Umbraco.Homework.API.Services
                 FirstNameRules = new List<ValidationRule> {
                     new ValidationRule { Regex = @"\S", ErrorMessage= "first name is mandatory" },
                 },
+
                 LastNameRules = new List<ValidationRule> {
                     new ValidationRule { Regex = @"\S", ErrorMessage= "last name is mandatory" },
                 },
