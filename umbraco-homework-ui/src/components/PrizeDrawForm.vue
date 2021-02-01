@@ -1,23 +1,41 @@
 <template>
-    <div>
-        <form @submit="submitEntry">
-            <Input v-model="firstName" ph="First t Name..." id="firstName" label="First Name" :validationRules="validationRules.firstNameRules" />
-            <Input v-model="lastName" id="lastName" ph="Last Name..." label="Last Name" :validationRules="validationRules.lastNameRules"/>
-            <Input v-model="email" id="email" ph="Email..." label="Email" :validationRules="validationRules.emailRules"/>
-            <Input v-model="serialNumber" id="serialNumber" ph="Serial Number..." label="Serial Number" :validationRules="validationRules.serialNumberRules"/>
+    <form @submit="submitEntry">
 
-            <input type="submit" value="submit" :disabled="!formIsValid" />
-        </form>
-    </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <Input v-model="firstName" ph="First t Name..." id="firstName" label="First Name" :validationRules="validationRules.firstNameRules" />
+            </div>
+            <div class="form-group col-md-6">
+                <Input v-model="lastName" id="lastName" ph="Last Name..." label="Last Name" :validationRules="validationRules.lastNameRules"/>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                <Input v-model="email" id="email" ph="Email..." label="Email" :validationRules="validationRules.emailRules"/>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                <Input v-model="serialNumber" id="serialNumber" ph="Serial Number..." label="Serial Number" :validationRules="validationRules.serialNumberRules"/>
+            </div>
+        </div>
+        
+        
+
+        <Button :text="'Submit Entry'" :enabled="!formIsValid" />
+    </form>
 </template>
 
 <script>
 import Input from '@/components/UI/Input';
+import Button from '@/components/UI/Button'
 
 export default {
     name: "PrizeDrawForm",
     props: ['validationRules'],
-    components: { Input },
+    components: { Input, Button },
     data() {
 
         return {

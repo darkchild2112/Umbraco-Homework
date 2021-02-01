@@ -1,15 +1,17 @@
 <template>
     <div>
-    <label :for="id">{{ label }}</label>
-    <p v-if="isValid === false">{{ errorMsg }}</p>
-    <input 
-        type="text" 
-        :value="modelValue.value" 
-        @input="updateParent($event)" 
-        :placeholder="ph"
-        :id="id"
-        :name="id"
-        :class="validDisplay">
+        <label :for="id" class="sr-only">{{ label }}</label>
+        
+        <input 
+            type="text" 
+            :value="modelValue.value" 
+            @input="updateParent($event)" 
+            :placeholder="ph"
+            :id="id"
+            :name="id"
+            :class="validDisplay"
+            class="form-control">
+        <div v-if="isValid === false" class="error-text">{{ errorMsg }}</div>
     </div>
 </template>
 
@@ -80,12 +82,18 @@ export default {
 
     .valid {
 
-        border-color: green;
+        border-color: #28a745;
     }
 
     .invalid {
 
-        border-color: red;
+        border-color: #dc3545;
+    }
+
+    .error-text {
+        color: #dc3545;
+        font-size: 0.75rem;
+        margin-top: 5px;
     }
 
 </style>

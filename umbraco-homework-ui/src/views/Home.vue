@@ -1,18 +1,27 @@
 <template>
   <div>
-    <Header />
+      <Container>
+        <Header />
+      </Container>
 
-    <PrizeDrawForm 
-      v-if="this.formState === 'initial'" 
-      v-bind:validationRules="this.validationRules"
-      v-on:successfulSubmit="successfulPrizeDrawSubmit"/>
+      <Container>
 
-    <div v-if="this.formState === 'submitted'">
-      <p>Thank you for submitting the form</p>
-      <template v-if="submissions < config.maxSubmissions">
-        <button v-on:click="tryAgain">Try again</button>
-      </template>
-    </div>
+        <ErrorAlert v-if:="error != null" :error="error" />
+
+        <PrizeDrawForm 
+          v-if="this.formState === 'initial'" 
+          v-bind:validationRules="this.validationRules"
+          v-on:successfulSubmit="successfulPrizeDrawSubmit"/>
+
+        <Spinner v-if="this.formState === 'sending'"/>
+
+        <template v-if="this.formState === 'submitted'">
+          <p>Thank you for submitting the form</p>
+          <template v-if="submissions < config.maxSubmissions">
+            <button v-on:click="tryAgain">Try again</button>
+          </template>
+        </template>
+      </Container>
   </div>
 </template>
 
@@ -21,13 +30,21 @@
 import Header from '@/components/layout/Header'
 import PrizeDrawForm from '@/components/PrizeDrawForm'
 
+import Container from '@/components/layout/Container'
+import Spinner from '@/components/UI/Spinner'
+
+import ErrorAlert from '@/components/UI/ErrorAlert'
+
 import dataAccess from '@/axios-base';
 
 export default {
   name: 'Home',
   components: {
     Header,
-    PrizeDrawForm
+    PrizeDrawForm,
+    Container, 
+    Spinner,
+    ErrorAlert
   },
   data() {
     return {
@@ -39,7 +56,8 @@ export default {
           lastNameRules: null,
           emailRules:  null,
           serialNumberRules: null
-        }
+        },
+        error: null
     }
   },
   methods: {
@@ -50,6 +68,9 @@ export default {
         this.formState = event;
       },
       successfulPrizeDrawSubmit(entry) {
+
+        this.formState = 'sending';
+        this.error = null;
 
         dataAccess.post('/PrizeDraw/SubmitEntry', entry)
           .then(response => {
@@ -68,11 +89,15 @@ export default {
             
             if(err.response.status === 400)
             {
-              //const msg = err.response.data.value.message;
-              //const errors = err.response.data.value.errors;
+              const error = { 
+                summary: err.response.data.value.message,
+                errors: err.response.data.value.errors
+              }
               
-              console.log(err.response.data.value);
+              this.error = error;
             }
+
+            this.formState = 'initial';
           });
       },
 
