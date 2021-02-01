@@ -21,6 +21,8 @@
 import Header from '@/components/layout/Header'
 import PrizeDrawForm from '@/components/PrizeDrawForm'
 
+import dataAccess from '@/axios-base';
+
 export default {
   name: 'Home',
   components: {
@@ -49,26 +51,29 @@ export default {
       },
       successfulPrizeDrawSubmit(entry) {
 
-        const options = {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(entry),
-        };
+        dataAccess.post('/PrizeDraw/SubmitEntry', entry)
+          .then(response => {
 
-        fetch('https://localhost:5001/PrizeDraw/SubmitEntry', options)
-        .then(data => {
-          console.log('Success:', data);
+            console.log('Success:', response);
 
-          this.submissions = this.submissions += 1;
-          this.formState = 'submitted';
+            this.submissions = this.submissions += 1;
+            this.formState = 'submitted';
 
-          console.log('prize draw successfully submitted');
-          console.log(`successfully submitted ${this.submissions} times`);
-          console.log(entry);
-        })
-        .catch(error => console.log('Error:', error.json()));
+            console.log('prize draw successfully submitted');
+            console.log(`successfully submitted ${this.submissions} times`);
+            console.log(entry);
+          })
+          .catch(err => { 
+            console.log(err.response);
+            
+            if(err.response.status === 400)
+            {
+              //const msg = err.response.data.value.message;
+              //const errors = err.response.data.value.errors;
+              
+              console.log(err.response.data.value);
+            }
+          });
       },
 
       tryAgain()
@@ -78,14 +83,13 @@ export default {
   },
   mounted(){
       
-      fetch('https://localhost:5001/Config')
-        .then(response => response.json())
-        .then(data => {
+      dataAccess.get('/Config')
+        .then(response => {
 
-          console.log(data);
+          console.log(response);
 
-          this.config = data;
-          this.validationRules = data.validation;
+          this.config = response.data;
+          this.validationRules = response.data.validation;
         })
         .catch(err => console.log(err));
   }

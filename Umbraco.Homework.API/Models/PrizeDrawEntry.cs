@@ -22,7 +22,7 @@ namespace Umbraco.Homework.API.Models
         public String Email { get; set; }
 
         [Required]
-        [MaxLength(50)]
+        [MaxLength(200)]
         public String SerialNumber { get; set; }
 
         public PrizeDrawEntry()
