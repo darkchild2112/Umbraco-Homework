@@ -15,12 +15,13 @@
 
         <Spinner v-if="this.formState === 'sending'"/>
 
-        <template v-if="this.formState === 'submitted'">
+        <div v-if="this.formState === 'submitted'" class="text-center">
+          <h2>Entry Successful</h2>
           <p>Thank you for submitting the form</p>
           <template v-if="submissions < config.maxSubmissions">
-            <button v-on:click="tryAgain">Try again</button>
+            <Button v-on:click="tryAgain" :text="'Submit Entry'" />
           </template>
-        </template>
+        </div>
       </Container>
   </div>
 </template>
@@ -35,6 +36,8 @@ import Spinner from '@/components/UI/Spinner'
 
 import ErrorAlert from '@/components/UI/ErrorAlert'
 
+import Button from '@/components/UI/Button'
+
 import dataAccess from '@/axios-base';
 
 export default {
@@ -44,7 +47,8 @@ export default {
     PrizeDrawForm,
     Container, 
     Spinner,
-    ErrorAlert
+    ErrorAlert,
+    Button
   },
   data() {
     return {

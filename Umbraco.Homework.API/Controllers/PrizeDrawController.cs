@@ -35,6 +35,9 @@ namespace Umbraco.Homework.API.Controllers
         [HttpPost("SubmitEntry")]
         public async Task<IActionResult> SubmitEntry([FromBody] PrizeDrawEntry entry)
         {
+            // TEMP CODE - So that I can see the spinner when styling
+            //Thread.Sleep(10000);
+
             try
             {
                 await _prizeDrawService.SubmitEntry(entry);
