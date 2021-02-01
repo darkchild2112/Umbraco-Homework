@@ -86,7 +86,7 @@ namespace Umbraco.Homework.API.Services
             {
                 Regex regex = new Regex(rule.Regex);
 
-                valid = regex.IsMatch(value);
+                valid = regex.IsMatch(value.ToLower());
 
                 if(valid == false)
                 {

@@ -57,7 +57,7 @@ export default {
           body: JSON.stringify(entry),
         };
 
-        fetch('https://localhost:5001/PrizeDraw/post', options)
+        fetch('https://localhost:5001/PrizeDraw/SubmitEntry', options)
         .then(data => {
           console.log('Success:', data);
 
@@ -68,7 +68,7 @@ export default {
           console.log(`successfully submitted ${this.submissions} times`);
           console.log(entry);
         })
-        .catch(error => console.log('Error:', error));
+        .catch(error => console.log('Error:', error.json()));
       },
 
       tryAgain()

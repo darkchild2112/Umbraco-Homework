@@ -45,7 +45,7 @@ export default {
 
                     var re = new RegExp(this.validationRules[rule].regex);
 
-                    this.isValid = re.test(value);
+                    this.isValid = re.test(value.toLowerCase());
 
                     if(this.isValid === false){
                         
