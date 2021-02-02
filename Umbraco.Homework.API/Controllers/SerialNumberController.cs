@@ -28,7 +28,7 @@ namespace Umbraco.Homework.API.Controllers
             => Ok(this._serialNumberService.ValidateSerialNumber(serialNumber));
 
         [HttpGet("GenerateSerialNumberRange")]
-        public async Task<IActionResult> GenerateSerialNumberRange(Int32 howMany)
+        public async Task<IActionResult> GenerateSerialNumberRange(Int32 howMany = 100)
         {
             if(howMany < 1)
             {
