@@ -74,6 +74,8 @@ namespace Umbraco.Homework.API
             {
                 endpoints.MapControllers();
             });
+
+            //app.ApplicationServices.GetRequiredService<PrizeDrawDbContext>().Database.EnsureCreated();
         }
     }
 }
