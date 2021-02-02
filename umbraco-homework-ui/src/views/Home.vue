@@ -111,7 +111,7 @@ export default {
         this.formState = 'initial';
       }
   },
-  mounted(){
+  beforeCreate(){
       
       dataAccess.get('/Config')
         .then(response => {
