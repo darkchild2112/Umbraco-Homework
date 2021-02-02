@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Umbraco.Homework.API.Models;
 using Umbraco.Homework.API.Services;
@@ -13,19 +14,29 @@ namespace Umbraco.Homework.API.Controllers
     [Route("[controller]")]
     public class ConfigController : ControllerBase
     {
-        private readonly IConfigService _configService;
+        private readonly IConfiguration _configuration;
 
-        public ConfigController(IConfigService configService)
+        public ConfigController(IConfiguration configuration)
         {
-            _configService = configService;
+            _configuration = configuration;
         }
 
         [HttpGet]
-        public async Task<JsonResult> Get()
+        public IActionResult Get()
         {
-            Config config = _configService.GetConfig();
+            return Ok(new Config
+            {
+                MaxSubmissions = this._configuration.GetValue<Int32>("MaxAllowedPrizeDrawEntries"),
 
-            return new JsonResult(config);
+                // TODO: Construct this more efficiently
+                Validation = new PrizeDrawValidation
+                {
+                    FirstNameRules = this._configuration.GetSection("Validation:FirstNameRules").Get<IEnumerable<ValidationRule>>(),
+                    LastNameRules = this._configuration.GetSection("Validation:LastNameRules").Get<IEnumerable<ValidationRule>>(),
+                    EmailRules = this._configuration.GetSection("Validation:EmailRules").Get<IEnumerable<ValidationRule>>(),
+                    SerialNumberRules = this._configuration.GetSection("Validation:SerialNumberRules").Get<IEnumerable<ValidationRule>>()
+                }
+            });
         }
     }
 }

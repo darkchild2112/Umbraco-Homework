@@ -6,19 +6,19 @@ using System.Linq;
 using System.Threading.Tasks;
 using Umbraco.Homework.API.Exceptions;
 using System.Text.RegularExpressions;
+using Microsoft.Extensions.Configuration;
 
 namespace Umbraco.Homework.API.Services
 {
     public class PrizeDrawService : ServiceBase, IPrizeDrawService
     {
         private readonly ISerialNumberService _serialNumberService;
+        private readonly IConfiguration _configuration;
 
-        private readonly IConfigService _configService;
-
-        public PrizeDrawService(PrizeDrawDbContext dataAccess, ISerialNumberService serialNumberService, IConfigService configService):base(dataAccess)
+        public PrizeDrawService(PrizeDrawDbContext dataAccess, ISerialNumberService serialNumberService, IConfiguration configuration):base(dataAccess)
         {
             this._serialNumberService = serialNumberService;
-            this._configService = configService;
+            this._configuration = configuration;
         }
 
         public IEnumerable<PrizeDrawEntry> GetAllEntries() => base._dataAccess.PrizeDrawEntries;
@@ -27,9 +27,16 @@ namespace Umbraco.Homework.API.Services
         {
             _ = entry ?? throw new NullReferenceException($"{nameof(PrizeDrawEntry)} must not be null");
 
-            Config config = this._configService.GetConfig();
+            // TODO: Construct this more efficiently
+            PrizeDrawValidation validation = new PrizeDrawValidation
+            {
+                FirstNameRules = this._configuration.GetSection("Validation:FirstNameRules").Get<IEnumerable<ValidationRule>>(),
+                LastNameRules = this._configuration.GetSection("Validation:LastNameRules").Get<IEnumerable<ValidationRule>>(),
+                EmailRules = this._configuration.GetSection("Validation:EmailRules").Get<IEnumerable<ValidationRule>>(),
+                SerialNumberRules = this._configuration.GetSection("Validation:SerialNumberRules").Get<IEnumerable<ValidationRule>>()
+            };
 
-            (Boolean isValid, IEnumerable<String> errors) validationResult = this.ValidateUserInput(config.Validation, entry);
+            (Boolean isValid, IEnumerable<String> errors) validationResult = this.ValidateUserInput(validation, entry);
 
             if (!validationResult.isValid)
             {

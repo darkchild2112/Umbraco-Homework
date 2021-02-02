@@ -41,8 +41,6 @@ namespace Umbraco.Homework.API
 
             services.AddScoped<IPrizeDrawService, PrizeDrawService>();
             services.AddScoped<ISerialNumberService, SerialNumberService>();
-
-            services.AddScoped<IConfigService, ConfigService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -58,11 +56,11 @@ namespace Umbraco.Homework.API
             app.UseRouting();
 
             app.UseCors(builder => builder
-                .WithOrigins("http://localhost:8080")
+                .WithOrigins(this.Configuration.GetValue<String>("AllowedCorsDomains"))
                 .AllowAnyMethod()
                 .AllowAnyHeader()
                 .SetPreflightMaxAge(new TimeSpan(0, 10, 0))
-            );
+            ); ;
 
             app.UseAuthorization();
 
