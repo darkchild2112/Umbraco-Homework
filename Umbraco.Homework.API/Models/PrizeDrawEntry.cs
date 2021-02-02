@@ -25,6 +25,9 @@ namespace Umbraco.Homework.API.Models
         [MaxLength(200)]
         public String SerialNumber { get; set; }
 
+        [Required]
+        public DateTime Submitted { get; set; }
+
         public PrizeDrawEntry()
         {
         }

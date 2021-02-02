@@ -46,6 +46,8 @@ namespace Umbraco.Homework.API.Services
                 throw new InvalidUserInputException("Invalid user input from prize draw entry", validationResult.errors);
             }
 
+            entry.Submitted = DateTime.Now;
+
             base._dataAccess.Add<PrizeDrawEntry>(entry);
 
             await base.Save();

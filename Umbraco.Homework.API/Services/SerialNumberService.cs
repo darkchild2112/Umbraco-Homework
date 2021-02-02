@@ -18,7 +18,8 @@ namespace Umbraco.Homework.API.Services
         {
             List<SerialNumber> sNumbers = new List<SerialNumber>();
 
-            Parallel.For(0, nToCreate, i =>
+            //Parallel.For(0, nToCreate, i =>
+            for(Int32 i =0; i < nToCreate; i++)
             {
                 SerialNumber sNumber = new SerialNumber
                 {
@@ -27,7 +28,7 @@ namespace Umbraco.Homework.API.Services
                 };
 
                 sNumbers.Add(sNumber);
-            });
+            };
 
             base._dataAccess.AddRange(sNumbers);
 
