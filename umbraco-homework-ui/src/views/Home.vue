@@ -19,6 +19,7 @@
           <h2>Entry Successful</h2>
           <p>Thank you for submitting the form</p>
           <template v-if="submissions < config.maxSubmissions">
+            <p>You can enter the prize draw a maximum number of {{ config.maxSubmissions }} times. Would you like to try again?</p>
             <Button v-on:click="tryAgain" :text="'Submit Entry'" />
           </template>
         </div>

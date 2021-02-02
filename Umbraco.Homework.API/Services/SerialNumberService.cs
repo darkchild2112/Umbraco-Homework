@@ -5,13 +5,19 @@ using Umbraco.Homework.API.Data;
 using Umbraco.Homework.API.Models;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace Umbraco.Homework.API.Services
 {
     public class SerialNumberService : ServiceBase, ISerialNumberService
     {
-        public SerialNumberService(PrizeDrawDbContext dataAccess):base(dataAccess)
+        private Int32 MaxUses => this._configuration.GetValue<Int32>("MaxAllowedPrizeDrawEntries");
+
+        private readonly IConfiguration _configuration;
+
+        public SerialNumberService(PrizeDrawDbContext dataAccess, IConfiguration configuration):base(dataAccess)
         {
+            this._configuration = configuration;
         }
 
         public async Task<IEnumerable<SerialNumber>> GenerateSerialNumberRange(Int32 nToCreate)
@@ -36,6 +42,15 @@ namespace Umbraco.Homework.API.Services
             return sNumbers;
         }
 
+        public void IncrementSerialNumberUses(String serialNumber)
+        {
+            SerialNumber sn = this._dataAccess.SerialNumbers
+                .Where(e => e.Code.ToLower() == serialNumber.ToLower())
+                .FirstOrDefault();
+
+            sn.Uses++;
+        }
+
         public Boolean ValidateSerialNumber(String serialNumber)
         {
             Boolean valid = false;
@@ -43,13 +58,12 @@ namespace Umbraco.Homework.API.Services
             // String.Equals doesn't work here :(
             SerialNumber sn = this._dataAccess.SerialNumbers
                 .AsNoTracking()
-                .Where(e => e.Code.ToLower() == serialNumber
-                .ToLower())
+                .Where(e => e.Code.ToLower() == serialNumber.ToLower())
                 .FirstOrDefault();
 
             if(sn != null)
             {
-                valid = sn.ValidUnitl > DateTime.Now;
+                valid = sn.ValidUnitl > DateTime.Now && sn.Uses < this.MaxUses;
             }
 
             return valid;
@@ -58,6 +72,7 @@ namespace Umbraco.Homework.API.Services
         public IEnumerable<SerialNumber> GetAllCurrentValidSerialNumbers()
             => this._dataAccess.SerialNumbers
             .AsNoTracking()
-            .Where(e => e.ValidUnitl > DateTime.Now);
+            .Where(sn => sn.ValidUnitl > DateTime.Now
+            && sn.Uses < this.MaxUses);
     }
 }

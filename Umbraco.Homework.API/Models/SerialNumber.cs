@@ -14,6 +14,9 @@ namespace Umbraco.Homework.API.Models
         [Required]
         public DateTime ValidUnitl { get; set; }
 
+        [Required]
+        public Int32 Uses { get; set; }
+
         public SerialNumber()
         {
         }

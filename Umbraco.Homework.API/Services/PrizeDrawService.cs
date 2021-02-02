@@ -30,16 +30,7 @@ namespace Umbraco.Homework.API.Services
         {
             _ = entry ?? throw new NullReferenceException($"{nameof(PrizeDrawEntry)} must not be null");
 
-            // TODO: Construct this more efficiently
-            PrizeDrawValidation validation = new PrizeDrawValidation
-            {
-                FirstNameRules = this._configuration.GetSection("Validation:FirstNameRules").Get<IEnumerable<ValidationRule>>(),
-                LastNameRules = this._configuration.GetSection("Validation:LastNameRules").Get<IEnumerable<ValidationRule>>(),
-                EmailRules = this._configuration.GetSection("Validation:EmailRules").Get<IEnumerable<ValidationRule>>(),
-                SerialNumberRules = this._configuration.GetSection("Validation:SerialNumberRules").Get<IEnumerable<ValidationRule>>()
-            };
-
-            (Boolean isValid, IEnumerable<String> errors) validationResult = this.ValidateUserInput(validation, entry);
+            (Boolean isValid, IEnumerable<String> errors) validationResult = this.ValidateUserInput(entry);
 
             if (!validationResult.isValid)
             {
@@ -47,6 +38,8 @@ namespace Umbraco.Homework.API.Services
             }
 
             entry.Submitted = DateTime.Now;
+
+            this._serialNumberService.IncrementSerialNumberUses(entry.SerialNumber);
 
             base._dataAccess.Add<PrizeDrawEntry>(entry);
 
@@ -56,9 +49,18 @@ namespace Umbraco.Homework.API.Services
         }
 
         // TODO: Async this!!
-        private (Boolean, IEnumerable<String>) ValidateUserInput(PrizeDrawValidation validation, PrizeDrawEntry entry)
+        private (Boolean, IEnumerable<String>) ValidateUserInput(PrizeDrawEntry entry)
         {
             List<String> errors = new List<String>();
+
+            // TODO: Construct this more efficiently
+            PrizeDrawValidation validation = new PrizeDrawValidation
+            {
+                FirstNameRules = this._configuration.GetSection("Validation:FirstNameRules").Get<IEnumerable<ValidationRule>>(),
+                LastNameRules = this._configuration.GetSection("Validation:LastNameRules").Get<IEnumerable<ValidationRule>>(),
+                EmailRules = this._configuration.GetSection("Validation:EmailRules").Get<IEnumerable<ValidationRule>>(),
+                SerialNumberRules = this._configuration.GetSection("Validation:SerialNumberRules").Get<IEnumerable<ValidationRule>>()
+            };
 
             (Boolean valid, IEnumerable<String> errors) firstNameValidationResults = this.ValidateField(validation.FirstNameRules, entry.FirstName);
             (Boolean valid, IEnumerable<String> errors) lastNameValidationResults = this.ValidateField(validation.LastNameRules, entry.LastName);
@@ -84,7 +86,7 @@ namespace Umbraco.Homework.API.Services
 
             if (isValidSerialNumber.HasValue && isValidSerialNumber.Value == false)
             {
-                errors.Add("Serial Number has expired");
+                errors.Add("Serial Number is no longer valid");
             }
 
             return (inputValid && isValidSerialNumber.HasValue && isValidSerialNumber.Value, errors);
