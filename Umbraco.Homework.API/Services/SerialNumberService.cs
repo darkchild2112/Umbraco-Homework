@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Umbraco.Homework.API.Data;
 using Umbraco.Homework.API.Models;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace Umbraco.Homework.API.Services
 {
@@ -41,7 +42,10 @@ namespace Umbraco.Homework.API.Services
 
             // String.Equals doesn't work here :(
             SerialNumber sn = this._dataAccess.SerialNumbers
-                .Where(e => e.Code.ToLower() == serialNumber.ToLower()).FirstOrDefault();
+                .AsNoTracking()
+                .Where(e => e.Code.ToLower() == serialNumber
+                .ToLower())
+                .FirstOrDefault();
 
             if(sn != null)
             {
@@ -51,6 +55,9 @@ namespace Umbraco.Homework.API.Services
             return valid;
         }
 
-        public IEnumerable<SerialNumber> GetAllCurrentValidSerialNumbers() => this._dataAccess.SerialNumbers.Where(e => e.ValidUnitl > DateTime.Now);
+        public IEnumerable<SerialNumber> GetAllCurrentValidSerialNumbers()
+            => this._dataAccess.SerialNumbers
+            .AsNoTracking()
+            .Where(e => e.ValidUnitl > DateTime.Now);
     }
 }

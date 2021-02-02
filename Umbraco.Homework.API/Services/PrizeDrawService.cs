@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Umbraco.Homework.API.Exceptions;
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore;
 
 namespace Umbraco.Homework.API.Services
 {
@@ -21,7 +22,9 @@ namespace Umbraco.Homework.API.Services
             this._configuration = configuration;
         }
 
-        public IEnumerable<PrizeDrawEntry> GetAllEntries() => base._dataAccess.PrizeDrawEntries;
+        public IEnumerable<PrizeDrawEntry> GetAllEntries()
+            => base._dataAccess.PrizeDrawEntries
+            .AsNoTracking();
 
         public async Task<PrizeDrawEntry> SubmitEntry(PrizeDrawEntry entry)
         {
@@ -50,6 +53,7 @@ namespace Umbraco.Homework.API.Services
             return entry;
         }
 
+        // TODO: Async this!!
         private (Boolean, IEnumerable<String>) ValidateUserInput(PrizeDrawValidation validation, PrizeDrawEntry entry)
         {
             List<String> errors = new List<String>();
