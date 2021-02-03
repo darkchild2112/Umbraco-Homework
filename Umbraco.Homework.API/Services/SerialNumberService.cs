@@ -50,6 +50,11 @@ namespace Umbraco.Homework.API.Services
                 .Where(e => e.Code.ToLower() == serialNumber.ToLower())
                 .FirstOrDefault();
 
+            IncrementSerialNumberUses(sn);
+        }
+
+        public void IncrementSerialNumberUses(SerialNumber sn)
+        {
             sn.Uses++;
         }
 
@@ -76,5 +81,10 @@ namespace Umbraco.Homework.API.Services
                 .AsNoTracking()
                 .Where(sn => sn.ValidUnitl > DateTime.Now
                 && sn.Uses < this.MaxUses);
+
+        public SerialNumber GetSerialNumber(String code)
+            => this._dataAccess.SerialNumbers
+            .Where(e => e.Code == code)
+            .FirstOrDefault();
     }
 }

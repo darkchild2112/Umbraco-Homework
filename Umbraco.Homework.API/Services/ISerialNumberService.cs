@@ -14,5 +14,9 @@ namespace Umbraco.Homework.API.Services
         IEnumerable<SerialNumber> GetAllCurrentValidSerialNumbers();
 
         void IncrementSerialNumberUses(String serialNumber);
+
+        void IncrementSerialNumberUses(SerialNumber sn);
+
+        SerialNumber GetSerialNumber(String code);
     }
 }

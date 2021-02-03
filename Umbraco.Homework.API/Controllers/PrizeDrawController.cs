@@ -33,7 +33,7 @@ namespace Umbraco.Homework.API.Controllers
         // TODO: create a method to generated the serial numbers which have an expiry date
 
         [HttpPost("SubmitEntry")]
-        public async Task<IActionResult> SubmitEntry([FromBody] PrizeDrawEntry entry)
+        public async Task<IActionResult> SubmitEntry([FromBody] PrizeDrawEntrySubmission entry)
         {
             try
             {

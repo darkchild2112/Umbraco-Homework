@@ -22,8 +22,7 @@ namespace Umbraco.Homework.API.Models
         public String Email { get; set; }
 
         [Required]
-        [MaxLength(200)]
-        public String SerialNumber { get; set; }
+        public SerialNumber SerialNumber { get; set; }
 
         [Required]
         public DateTime Submitted { get; set; }

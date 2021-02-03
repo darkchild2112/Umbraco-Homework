@@ -9,6 +9,6 @@ namespace Umbraco.Homework.API.Services
     {
         IEnumerable<PrizeDrawEntry> GetAllEntries();
 
-        Task<PrizeDrawEntry> SubmitEntry(PrizeDrawEntry entry);
+        Task<PrizeDrawEntry> SubmitEntry(PrizeDrawEntrySubmission entry);
     }
 }

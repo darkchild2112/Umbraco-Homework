@@ -57,7 +57,7 @@ namespace Umbraco.Homework.API.Test
 
             IEnumerable<SerialNumber> serialNumbers = await serialNumberService.GenerateSerialNumberRange(1);
 
-            base.GetControllerResultAsync(controller.SubmitEntry, new PrizeDrawEntry
+            base.GetControllerResultAsync(controller.SubmitEntry, new PrizeDrawEntrySubmission
             {
                 FirstName = "John",
                 LastName = "Smith",

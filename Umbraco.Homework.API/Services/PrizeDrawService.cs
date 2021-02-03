@@ -26,20 +26,29 @@ namespace Umbraco.Homework.API.Services
             => base._dataAccess.PrizeDrawEntries
             .AsNoTracking();
 
-        public async Task<PrizeDrawEntry> SubmitEntry(PrizeDrawEntry entry)
+        public async Task<PrizeDrawEntry> SubmitEntry(PrizeDrawEntrySubmission userInput)
         {
-            _ = entry ?? throw new NullReferenceException($"{nameof(PrizeDrawEntry)} must not be null");
+            _ = userInput ?? throw new NullReferenceException($"{nameof(PrizeDrawEntrySubmission)} must not be null");
 
-            (Boolean isValid, IEnumerable<String> errors) validationResult = this.ValidateUserInput(entry);
+            (Boolean isValid, IEnumerable<String> errors) validationResult = this.ValidateUserInput(userInput);
 
             if (!validationResult.isValid)
             {
                 throw new InvalidUserInputException("Invalid user input from prize draw entry", validationResult.errors);
             }
 
-            entry.Submitted = DateTime.Now;
+            SerialNumber serialNumber = this._serialNumberService.GetSerialNumber(userInput.SerialNumber);
 
-            this._serialNumberService.IncrementSerialNumberUses(entry.SerialNumber);
+            this._serialNumberService.IncrementSerialNumberUses(serialNumber);
+
+            PrizeDrawEntry entry = new PrizeDrawEntry
+            {
+                 FirstName = userInput.FirstName,
+                 LastName = userInput.LastName,
+                 Email = userInput.Email,
+                 Submitted = DateTime.Now,
+                 SerialNumber = serialNumber
+            };
 
             base._dataAccess.Add<PrizeDrawEntry>(entry);
 
@@ -48,8 +57,10 @@ namespace Umbraco.Homework.API.Services
             return entry;
         }
 
+        // ----------------------------------------------------
+
         // TODO: Async this!!
-        private (Boolean, IEnumerable<String>) ValidateUserInput(PrizeDrawEntry entry)
+        private (Boolean, IEnumerable<String>) ValidateUserInput(PrizeDrawEntrySubmission entry)
         {
             List<String> errors = new List<String>();
 
