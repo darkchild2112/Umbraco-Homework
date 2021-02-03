@@ -9,6 +9,8 @@ using Umbraco.Homework.API.Models;
 using Umbraco.Homework.API.Services;
 using Xunit;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Umbraco.Homework.API.Test
 {
@@ -26,14 +28,12 @@ namespace Umbraco.Homework.API.Test
     // MockBehaviour.Loose (Default) - won't throw
     // Example: Mock<IRepository<Bitmap>> mockImgRepo = new Mock<IRepository<Bitmap>>(MockBehavior.Strict);
 
-    public class SerialNumberTests
+    public class SerialNumberTests : BaseTests
     {
         [Fact]
         public void TestInstantiation()
         {
-            IConfiguration configuration = new ConfigurationBuilder()
-                .AddInMemoryCollection(new Dictionary<string, string>())
-                .Build();
+            IConfiguration configuration = GetConfiguration(null);
 
             var optionsBuilder = new DbContextOptionsBuilder<PrizeDrawDbContext>();
 
@@ -47,25 +47,11 @@ namespace Umbraco.Homework.API.Test
 
             Assert.NotNull(controller);
         }
-
-        /*
-            IActionResult test = controller.Get();
-
-            OkObjectResult okResult = test as OkObjectResult;
-
-            Config config = okResult.Value as Config;
-
-            Assert.NotNull(okResult);
-            Assert.Equal(200, okResult.StatusCode);
-            Assert.Equal(2, config.MaxSubmissions);
-        */
 
         [Fact]
         public void TestGenerateSerialNumberRange()
         {
-            IConfiguration configuration = new ConfigurationBuilder()
-                .AddInMemoryCollection(new Dictionary<string, string>())
-                .Build();
+            IConfiguration config = GetConfiguration(null);
 
             var optionsBuilder = new DbContextOptionsBuilder<PrizeDrawDbContext>();
 
@@ -73,21 +59,80 @@ namespace Umbraco.Homework.API.Test
 
             var context = new PrizeDrawDbContext(optionsBuilder.Options);
 
-            ISerialNumberService serialNumberService = new SerialNumberService(context, configuration);
+            ISerialNumberService serialNumberService = new SerialNumberService(context, config);
 
             SerialNumberController controller = new SerialNumberController(serialNumberService);
 
-            IActionResult test = controller.GenerateSerialNumberRange().Result;
+            IEnumerable<SerialNumber> serialNumbers = GetControllerResultAsync<IEnumerable<SerialNumber>, Int32>(controller.GenerateSerialNumberRange, 100).Result;
 
-            OkObjectResult okResult = test as OkObjectResult;
-
-            IEnumerable<SerialNumber> serialNumbers = okResult.Value as IEnumerable<SerialNumber>;
-
-            Assert.NotNull(okResult);
-            Assert.Equal(200, okResult.StatusCode);
             Assert.Equal(100, serialNumbers.Count());
 
             Assert.NotNull(controller);
         }
+
+        [Fact]
+        public void TestSerialNumberExpiryPositive()
+        {
+            Int32 expiry = 600;
+
+            IConfiguration config = GetConfiguration(
+                new Dictionary<string, string>{
+                    { "SerialNumberExpiryMilliseconds", expiry.ToString() },
+                    { "MaxAllowedPrizeDrawEntries", "2" }
+                });
+
+            var optionsBuilder = new DbContextOptionsBuilder<PrizeDrawDbContext>();
+
+            optionsBuilder.UseInMemoryDatabase("PrizeDrawDatabseName");
+
+            var context = new PrizeDrawDbContext(optionsBuilder.Options);
+
+            ISerialNumberService serialNumberService = new SerialNumberService(context, config);
+
+            SerialNumberController controller = new SerialNumberController(serialNumberService);
+
+            IEnumerable<SerialNumber> generatedSerialNumbers = GetControllerResultAsync<IEnumerable<SerialNumber>,Int32>(controller.GenerateSerialNumberRange, 10).Result;
+
+            Assert.NotNull(generatedSerialNumbers);
+
+            IEnumerable<String> validSerialNumbers = GetControllerResult<IEnumerable<String>>(controller.GetAllCurrentValidSerialNumbers);
+
+            Assert.NotNull(validSerialNumbers);
+            Assert.NotEmpty(validSerialNumbers);
+        }
+
+        /*
+        [Fact]
+        public void TestSerialNumberExpiryNegative()
+        {
+            Int32 expiry = 6;
+
+            IConfiguration config = GetConfiguration(
+                new Dictionary<string, string> {
+                    { "SerialNumberExpiryMilliseconds", "0" },
+                    { "MaxAllowedPrizeDrawEntries", "2" }
+                });
+
+            var optionsBuilder = new DbContextOptionsBuilder<PrizeDrawDbContext>();
+
+            optionsBuilder.UseInMemoryDatabase("PrizeDrawDatabseName");
+
+            var context = new PrizeDrawDbContext(optionsBuilder.Options);
+
+            ISerialNumberService serialNumberService = new SerialNumberService(context, config);
+
+            SerialNumberController controller = new SerialNumberController(serialNumberService);
+
+            IEnumerable<SerialNumber> generatedSerialNumbers = GetControllerResultAsync<IEnumerable<SerialNumber>, Int32>(
+                controller.GenerateSerialNumberRange, 10).Result;
+
+            Assert.NotNull(generatedSerialNumbers);
+
+            IEnumerable<String> validSerialNumbers = GetControllerResult<IEnumerable<String>>(controller.GetAllCurrentValidSerialNumbers);
+
+            Assert.NotNull(validSerialNumbers);
+            Assert.Empty(validSerialNumbers);
+        }
+        */
     }
 }

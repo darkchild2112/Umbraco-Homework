@@ -13,6 +13,8 @@ namespace Umbraco.Homework.API.Services
     {
         private Int32 MaxUses => this._configuration.GetValue<Int32>("MaxAllowedPrizeDrawEntries");
 
+        private Int32 ExpiryMilliseconds => this._configuration.GetValue<Int32>("SerialNumberExpiryMilliseconds"); 
+
         private readonly IConfiguration _configuration;
 
         public SerialNumberService(PrizeDrawDbContext dataAccess, IConfiguration configuration):base(dataAccess)
@@ -29,7 +31,7 @@ namespace Umbraco.Homework.API.Services
                 SerialNumber sNumber = new SerialNumber
                 {
                     Code = Guid.NewGuid().ToString(),
-                    ValidUnitl = DateTime.Now.AddMinutes(10)
+                    ValidUnitl = DateTime.Now.AddMilliseconds(this.ExpiryMilliseconds)
                 };
 
                 sNumbers.Add(sNumber);
@@ -71,8 +73,8 @@ namespace Umbraco.Homework.API.Services
 
         public IEnumerable<SerialNumber> GetAllCurrentValidSerialNumbers()
             => this._dataAccess.SerialNumbers
-            .AsNoTracking()
-            .Where(sn => sn.ValidUnitl > DateTime.Now
-            && sn.Uses < this.MaxUses);
+                .AsNoTracking()
+                .Where(sn => sn.ValidUnitl > DateTime.Now
+                && sn.Uses < this.MaxUses);
     }
 }

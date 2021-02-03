@@ -22,14 +22,12 @@ using Xunit;
 
 namespace Umbraco.Homework.API.Test
 {
-    public class ConfigControllerTests
+    public class ConfigControllerTests : BaseTests
     {
         [Fact]
         public void TestInstantiation()
         {
-            IConfiguration configuration = new ConfigurationBuilder()
-                .AddInMemoryCollection(new Dictionary<string, string>())
-                .Build();
+            IConfiguration configuration = base.GetConfiguration();
 
             ConfigController controller = new ConfigController(configuration);
 
@@ -39,9 +37,7 @@ namespace Umbraco.Homework.API.Test
         [Fact]
         public void TestGetConfigResult()
         {
-            IConfiguration configuration = new ConfigurationBuilder()
-                .AddInMemoryCollection(new Dictionary<string, string>())
-                .Build();
+            IConfiguration configuration = base.GetConfiguration();
 
             ConfigController controller = new ConfigController(configuration);
 
@@ -57,14 +53,10 @@ namespace Umbraco.Homework.API.Test
         [Fact]
         public void TestMaxAllowedPrizeDrawEntries()
         {
-            var inMemorySettings = new Dictionary<string, string>
+            IConfiguration configuration = base.GetConfiguration(new Dictionary<string, string>
             {
                 { "MaxAllowedPrizeDrawEntries", "2" }
-            };
-
-            IConfiguration configuration = new ConfigurationBuilder()
-                .AddInMemoryCollection(inMemorySettings)
-                .Build();
+            });
 
             ConfigController controller = new ConfigController(configuration);
 
