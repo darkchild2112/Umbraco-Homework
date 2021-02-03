@@ -53,33 +53,40 @@ namespace Umbraco.Homework.API.Services
         {
             List<String> errors = new List<String>();
 
-            // TODO: Construct this more efficiently
-            PrizeDrawValidation validation = new PrizeDrawValidation
+            IConfigurationSection validationSection = this._configuration.GetSection("Validation");
+
+            Boolean inputValid = true;
+
+            if (validationSection.Value != null)
             {
-                FirstNameRules = this._configuration.GetSection("Validation:FirstNameRules").Get<IEnumerable<ValidationRule>>(),
-                LastNameRules = this._configuration.GetSection("Validation:LastNameRules").Get<IEnumerable<ValidationRule>>(),
-                EmailRules = this._configuration.GetSection("Validation:EmailRules").Get<IEnumerable<ValidationRule>>(),
-                SerialNumberRules = this._configuration.GetSection("Validation:SerialNumberRules").Get<IEnumerable<ValidationRule>>()
-            };
+                // TODO: Construct this more efficiently
+                PrizeDrawValidation validation = new PrizeDrawValidation
+                {
+                    FirstNameRules = validationSection.GetSection("FirstNameRules").Get<IEnumerable<ValidationRule>>(),
+                    LastNameRules = validationSection.GetSection("LastNameRules").Get<IEnumerable<ValidationRule>>(),
+                    EmailRules = validationSection.GetSection("EmailRules").Get<IEnumerable<ValidationRule>>(),
+                    SerialNumberRules = validationSection.GetSection("SerialNumberRules").Get<IEnumerable<ValidationRule>>()
+                };
 
-            (Boolean valid, IEnumerable<String> errors) firstNameValidationResults = this.ValidateField(validation.FirstNameRules, entry.FirstName);
-            (Boolean valid, IEnumerable<String> errors) lastNameValidationResults = this.ValidateField(validation.LastNameRules, entry.LastName);
-            (Boolean valid, IEnumerable<String> errors) emailValidationResults = this.ValidateField(validation.EmailRules, entry.Email);
-            (Boolean valid, IEnumerable<String> errors) serailNumberValidationResults = this.ValidateField(validation.SerialNumberRules, entry.SerialNumber);
+                (Boolean valid, IEnumerable<String> errors) firstNameValidationResults = this.ValidateField(validation.FirstNameRules, entry.FirstName);
+                (Boolean valid, IEnumerable<String> errors) lastNameValidationResults = this.ValidateField(validation.LastNameRules, entry.LastName);
+                (Boolean valid, IEnumerable<String> errors) emailValidationResults = this.ValidateField(validation.EmailRules, entry.Email);
+                (Boolean valid, IEnumerable<String> errors) serailNumberValidationResults = this.ValidateField(validation.SerialNumberRules, entry.SerialNumber);
 
-            Boolean inputValid = firstNameValidationResults.valid && lastNameValidationResults.valid && emailValidationResults.valid && serailNumberValidationResults.valid;
+                inputValid = firstNameValidationResults.valid && lastNameValidationResults.valid && emailValidationResults.valid && serailNumberValidationResults.valid;
+
+                if (inputValid == false)
+                {
+                    errors.AddRange(firstNameValidationResults.errors);
+                    errors.AddRange(lastNameValidationResults.errors);
+                    errors.AddRange(emailValidationResults.errors);
+                    errors.AddRange(serailNumberValidationResults.errors);
+                }
+            }
 
             Boolean? isValidSerialNumber = null;
 
-            if(inputValid == false)
-            {
-                errors.AddRange(firstNameValidationResults.errors);
-                errors.AddRange(lastNameValidationResults.errors);
-                errors.AddRange(emailValidationResults.errors);
-                errors.AddRange(serailNumberValidationResults.errors);
-            }
-
-            if(serailNumberValidationResults.valid == true)
+            if(inputValid)
             {
                 isValidSerialNumber = this._serialNumberService.ValidateSerialNumber(entry.SerialNumber);
             }

@@ -35,5 +35,35 @@ namespace Umbraco.Homework.API.Test
 
             Assert.NotNull(controller);
         }
+
+        [Fact]
+        public async void TestSubmittingPrizeEntry()
+        {
+            IConfiguration configuration = GetConfiguration(null);
+
+            var optionsBuilder = new DbContextOptionsBuilder<PrizeDrawDbContext>();
+
+            optionsBuilder.UseInMemoryDatabase("PrizeDrawDatabseName");
+
+            var context = new PrizeDrawDbContext(optionsBuilder.Options);
+
+            ISerialNumberService serialNumberService = new SerialNumberService(context, configuration);
+
+            IPrizeDrawService prizedrawService = new PrizeDrawService(context, serialNumberService, configuration);
+
+            PrizeDrawController controller = new PrizeDrawController(prizedrawService);
+
+            Assert.NotNull(controller);
+
+            IEnumerable<SerialNumber> serialNumbers = await serialNumberService.GenerateSerialNumberRange(1);
+
+            base.GetControllerResultAsync(controller.SubmitEntry, new PrizeDrawEntry
+            {
+                FirstName = "John",
+                LastName = "Smith",
+                Email = "aaa@sss.com",
+                SerialNumber = serialNumbers.FirstOrDefault()?.Code,
+            });
+        }
     }
 }
