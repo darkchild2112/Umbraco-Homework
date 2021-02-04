@@ -13,6 +13,8 @@ namespace Umbraco.Homework.API.Models
 
         public IEnumerable<ValidationRule> SerialNumberRules { get; set; }
 
+        public IEnumerable<ValidationRule> DateOfBirthRules { get; set; }
+
         public PrizeDrawValidation()
         {
         }

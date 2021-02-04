@@ -8,6 +8,7 @@ using Umbraco.Homework.API.Exceptions;
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
+using Umbraco.Homework.API.Helpers;
 
 namespace Umbraco.Homework.API.Services
 {
@@ -70,14 +71,7 @@ namespace Umbraco.Homework.API.Services
 
             if (validationSection.Value != null)
             {
-                // TODO: Construct this more efficiently
-                PrizeDrawValidation validation = new PrizeDrawValidation
-                {
-                    FirstNameRules = validationSection.GetSection("FirstNameRules").Get<IEnumerable<ValidationRule>>(),
-                    LastNameRules = validationSection.GetSection("LastNameRules").Get<IEnumerable<ValidationRule>>(),
-                    EmailRules = validationSection.GetSection("EmailRules").Get<IEnumerable<ValidationRule>>(),
-                    SerialNumberRules = validationSection.GetSection("SerialNumberRules").Get<IEnumerable<ValidationRule>>()
-                };
+                PrizeDrawValidation validation = ValidationHelper.GetValidation(this._configuration);
 
                 (Boolean valid, IEnumerable<String> errors) firstNameValidationResults = this.ValidateField(validation.FirstNameRules, entry.FirstName);
                 (Boolean valid, IEnumerable<String> errors) lastNameValidationResults = this.ValidateField(validation.LastNameRules, entry.LastName);
@@ -107,7 +101,24 @@ namespace Umbraco.Homework.API.Services
                 errors.Add("Serial Number is no longer valid");
             }
 
-            return (inputValid && isValidSerialNumber.HasValue && isValidSerialNumber.Value, errors);
+
+            // Not the prettiest :(
+            Int32 age = DateTime.Now.Year - entry.DateOfBirth.Year;
+
+            if (entry.DateOfBirth > DateTime.Now.AddYears(-age))
+            {
+                age--;
+            }
+
+            // Todo: move this to a config file
+            Boolean oldEnough = age >= 18;
+
+            if (!oldEnough)
+            {
+                errors.Add("Not old enough sorry. min age is 18");
+            }
+
+            return (inputValid && isValidSerialNumber.HasValue && isValidSerialNumber.Value && oldEnough, errors);
         }
 
         private (Boolean, IEnumerable<String>) ValidateField(IEnumerable<ValidationRule> rules, String value)

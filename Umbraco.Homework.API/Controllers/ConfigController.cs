@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Umbraco.Homework.API.Helpers;
 using Umbraco.Homework.API.Models;
 using Umbraco.Homework.API.Services;
 
@@ -27,15 +28,7 @@ namespace Umbraco.Homework.API.Controllers
             return Ok(new Config
             {
                 MaxSubmissions = this._configuration.GetValue<Int32>("MaxAllowedPrizeDrawEntries"),
-
-                // TODO: Construct this more efficiently
-                Validation = new PrizeDrawValidation
-                {
-                    FirstNameRules = this._configuration.GetSection("Validation:FirstNameRules").Get<IEnumerable<ValidationRule>>(),
-                    LastNameRules = this._configuration.GetSection("Validation:LastNameRules").Get<IEnumerable<ValidationRule>>(),
-                    EmailRules = this._configuration.GetSection("Validation:EmailRules").Get<IEnumerable<ValidationRule>>(),
-                    SerialNumberRules = this._configuration.GetSection("Validation:SerialNumberRules").Get<IEnumerable<ValidationRule>>()
-                }
+                Validation = ValidationHelper.GetValidation(this._configuration)
             });
         }
     }

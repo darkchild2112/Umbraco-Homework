@@ -3,22 +3,25 @@
 
         <div class="form-row">
             <div class="form-group col-md-6">
-                <Input v-model="firstName" ph="First t Name..." id="firstName" label="First Name" :validationRules="validationRules.firstNameRules" />
+                <Input type="text" v-model="firstName" ph="First t Name..." id="firstName" label="First Name" :validationRules="validationRules.firstNameRules" />
             </div>
             <div class="form-group col-md-6">
-                <Input v-model="lastName" id="lastName" ph="Last Name..." label="Last Name" :validationRules="validationRules.lastNameRules"/>
+                <Input type="text" v-model="lastName" id="lastName" ph="Last Name..." label="Last Name" :validationRules="validationRules.lastNameRules"/>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <Input type="text" v-model="dateOfBirth" ph="Date of Birth (mm/dd/yyyy)" id="dateOfBirth" label="Date of Birth" :validationRules="validationRules.dateOfBirthRules" />
+            </div>
+            <div class="form-group col-md-6">
+                <Input type="text" v-model="email" id="email" ph="Email..." label="Email" :validationRules="validationRules.emailRules"/>
             </div>
         </div>
 
         <div class="form-row">
             <div class="form-group col-md-12">
-                <Input v-model="email" id="email" ph="Email..." label="Email" :validationRules="validationRules.emailRules"/>
-            </div>
-        </div>
-
-        <div class="form-row">
-            <div class="form-group col-md-12">
-                <Input v-model="serialNumber" id="serialNumber" ph="Serial Number..." label="Serial Number" :validationRules="validationRules.serialNumberRules"/>
+                <Input type="text" v-model="serialNumber" id="serialNumber" ph="Serial Number..." label="Serial Number" :validationRules="validationRules.serialNumberRules"/>
             </div>
         </div>
         
@@ -32,6 +35,8 @@
 import Input from '@/components/UI/Input';
 import Button from '@/components/UI/Button'
 
+import moment from 'moment';
+
 export default {
     name: "PrizeDrawForm",
     props: ['validationRules'],
@@ -43,6 +48,7 @@ export default {
             lastName: { isValid: false, value: ''},
             email: { isValid: false, value: ''},
             serialNumber: { isValid: false, value: ''},
+            dateOfBirth : { isValid: false, value: ''}
         }
     },
     computed: {
@@ -58,12 +64,19 @@ export default {
 
             if(this.formIsValid === true)
             {
+                //const dob = Date.parse(this.dateOfBirth.value.split("/").reverse().join("-"));
+
+                const dob = moment(`${this.dateOfBirth.value} 01:01:01`, 'DD/MM/YYYY hh:mm:ss');
+
+                console.log(dob);
+
                 const newPDrawSub = {
 
                     firstName: this.firstName.value,
                     lastName: this.lastName.value,
                     email: this.email.value,
-                    serialNumber: this.serialNumber.value
+                    serialNumber: this.serialNumber.value,
+                    dateOfBirth: dob.toDate()
                 };
 
                 this.$emit('successfulSubmit', newPDrawSub);

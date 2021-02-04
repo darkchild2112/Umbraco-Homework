@@ -3,7 +3,7 @@
         <label :for="id" class="sr-only">{{ label }}</label>
         
         <input 
-            type="text" 
+            :type="type" 
             :value="modelValue.value" 
             @input="updateParent($event)" 
             :placeholder="ph"
@@ -23,7 +23,8 @@ export default {
         ph: String, 
         id: String, 
         label:String, 
-        validationRules: Object 
+        validationRules: Object,
+        type: String 
     },
     emits: ['update:modelValue'],
     data() {
