@@ -75,7 +75,13 @@ namespace Umbraco.Homework.API
                 endpoints.MapControllers();
             });
 
-            //app.ApplicationServices.GetRequiredService<PrizeDrawDbContext>().Database.EnsureCreated();
+            // Wouldn't use this for production but it's nice for prototypes and demos
+            using (var serviceScope = app.ApplicationServices.CreateScope())
+            {
+                var context = serviceScope.ServiceProvider.GetService<PrizeDrawDbContext>();
+
+                context.Database.EnsureCreated();
+            }
         }
     }
 }
