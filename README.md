@@ -6,11 +6,11 @@ So, lets get started....
 
 ## The API
 
-The API has been written using .Net Core 3.1. I did consider .Net 5 but as this is fairly new and I've only just started using it, I dicided to play it safe. I've used Entity Framework Core for data access and also Swagger for easy API documenting and testing. Swagger is also the tool to use to generate the Serial mumbers and View Prize entries. The swagger interface is the default page when runninmg the site. For unit testing I've used XUnit and Moq, however I mostly used an InMemory databse context and didn't use the Moqing framework in the end. 
+The API has been written using .Net Core 3.1. I did consider .Net 5 but as this is fairly new and I've only just started using it, I dicided to play it safe. I've used Entity Framework Core for data access and also Swagger for easy API documenting and testing. Swagger is also the tool to use to generate the Serial mumbers and View Prize Entries. For unit testing I've used XUnit and Moq, however I mostly used an InMemory databse context and didn't use the Moqing framework in the end. 
 
 ### Project Setup
 
-The Solution contains two projects; the API and the other for Unit Tests. I did originally start with more, with the Models and services in seperate projects but there seems to be an issue with creating Entity Framework migrations on Visual Studio for Mac with this setup. Frustrating as I've had this working on a Windows setup in the past :(
+The Solution contains two projects; one for the API and the other for Unit Tests. I did originally start with more, with the Models and services in seperate projects but there seems to be an issue with creating Entity Framework migrations on Visual Studio for Mac with this setup. This was frustrating as I've had this working on a Windows setup in the past :(
 
 ### Dependency Injection
 
@@ -22,11 +22,13 @@ Nuget should automatically restore all packages when frist loading the solution.
 
 ### Datbase
 
-The Database itself is self installing and will create the DB and all nessacary tables when the API runs, all you'll need to do is check the connection string in the appSettings.json file to make sure the default connection string points to an available SQL server.
+The Database itself is self installing and will create the DB and all nessacary tables when the API runs for the first time, all you'll need to do is check the connection string in the appSettings.json file to make sure the default connection string points to an available SQL server.
 
 ### Running the Solution
 
-To run the solution simply hit run in the toolbar at the top of Visual Studio. You can then use the Swagger interface to generate the serial numbers using the SerialNumber/GenerateSerialNumberRange API Method. The serial numbers expire after 10 minutes, I've set this to a low number initially so you can see the UI response when submitting an expired Serial Number. If you'd like to change this, there's a setting in the appSettings.json file called "SerialNumberExpiryMilliseconds" which can be changed. Once you have a valid serial number you can then use this on the UI to submit a Prize entry.
+To run the solution simply hit run in the toolbar at the top of Visual Studio. You can then use the Swagger interface (which is set to the dewfault page) to generate the serial numbers using the SerialNumber/GenerateSerialNumberRange API Method. The serial numbers expire after 10 minutes, I've set this to a low number initially so you can see the UI response when submitting an expired Serial Number. If you'd like to change this, there's a setting in the appSettings.json file called "SerialNumberExpiryMilliseconds" which can be changed. Once you have a valid serial number you can then use this on the UI to submit a Prize entry.
+
+When you have some prize entries submitted via the UI or alternatively directly through the swagger interface using the /PrizeDraw/SubmitEntry API method, you can then use the swagger interface to view all prize entries using the /PrizeDraw/GetAllEntries
 
 ## User Interface
 
@@ -34,20 +36,22 @@ The user interface has been written using the VueJS CLI and Visual Studio Code. 
 
 ### Requirements
 
-- Node.js is required for the NPM package management and server
+    * Node.js is required for the NPM package management and server
 
 ### Usage 
 
 Firstly, install all third party packages by running the command
 
-'npm install'
+    'npm install'
 
-to run the site you'll then need to run the command
+To run the site you'll then need to run the command
 
-'npm run serve'
+    'npm run serve'
 
 The server should host the site on http://localhost:8080 which can be enetered into any browser.
 
 The UI will instantly try and connect to the API to get config information so insure the API is running first. Alternatively refresh the page to initialise the site.
+
+
 
 
