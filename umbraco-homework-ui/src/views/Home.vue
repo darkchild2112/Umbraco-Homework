@@ -6,16 +6,18 @@
 
       <Container>
 
-        <ErrorAlert v-if:="error != null" :error="error" />
+        {{ this.state }}
+
+        <ErrorAlert v-if="displayError" :error="error" />
 
         <PrizeDrawForm 
-          v-if="this.formState === 'initial'" 
+          v-if="displayForm" 
           v-bind:validationRules="this.validationRules"
           v-on:successfulSubmit="successfulPrizeDrawSubmit"/>
 
-        <Spinner v-if="this.formState === 'sending'"/>
+        <Spinner v-if="displaySpinner"/>
 
-        <div v-if="this.formState === 'submitted'" class="text-center">
+        <div v-if="displayConfirmation" class="text-center">
           <h2>Entry Successful</h2>
           <p>Thank you for submitting the form</p>
           <template v-if="submissions < config.maxSubmissions">
@@ -41,6 +43,8 @@ import Button from '@/components/UI/Button'
 
 import dataAccess from '@/axios-base';
 
+import FormState from '@/models/FormState';
+
 export default {
   name: 'Home',
   components: {
@@ -54,7 +58,7 @@ export default {
   data() {
     return {
         submissions: 0,
-        formState: 'initial',
+        formState: FormState.INITIAL,
         config: null,
         validationRules: {
           firstNameRules: null,
@@ -62,19 +66,29 @@ export default {
           emailRules:  null,
           serialNumberRules: null
         },
-        error: null
+        error: null,
+        state: ''
     }
+  },
+  computed: {
+      displayForm(){
+        return this.formState === FormState.INITIAL;
+      },
+      displayError() {
+        return this.error != null
+      },
+      displaySpinner() {
+        return this.formState === FormState.SENDING;
+      },
+      displayConfirmation(){
+        return this.formState === FormState.SUBMITTED;
+      }
   },
   methods: {
 
-      updateInput(event) {
-
-        console.log(event);
-        this.formState = event;
-      },
       successfulPrizeDrawSubmit(entry) {
 
-        this.formState = 'sending';
+        this.formState = FormState.SENDING;
         this.error = null;
 
         dataAccess.post('/PrizeDraw/SubmitEntry', entry)
@@ -83,7 +97,7 @@ export default {
             console.log('Success:', response);
 
             this.submissions = this.submissions += 1;
-            this.formState = 'submitted';
+            this.formState = FormState.SUBMITTED;
 
             console.log('prize draw successfully submitted');
             console.log(`successfully submitted ${this.submissions} times`);
@@ -102,13 +116,13 @@ export default {
               this.error = error;
             }
 
-            this.formState = 'initial';
+            this.formState = FormState.INITIAL;
           });
       },
 
       tryAgain()
       {
-        this.formState = 'initial';
+        this.formState = FormState.INITIAL;
       }
   },
   beforeCreate(){
@@ -120,8 +134,23 @@ export default {
 
           this.config = response.data;
           this.validationRules = response.data.validation;
+
+          console.log(FormState.INITIAL);
+
+
         })
-        .catch(err => console.log(err));
+        .catch(err => {
+          
+          const error = { 
+                summary: "Error Contacting the API - Please refresh the page to try again",
+                errors: null
+              }
+              
+              this.error = error;
+
+          console.log(err)}
+          
+        );
   }
 }
 

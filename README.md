@@ -6,7 +6,7 @@ So, lets get started....
 
 ## The API
 
-The API has been written using .Net Core 3.1. I did consider .Net 5 but as this is fairly new and I've only just started using it, I dicided to play it safe. I've used Entity Framework Core for data access and also Swagger for easy API documenting and testing. Swagger is also the tool to use to generate the Serial mumbers and View Prize Entries. For unit testing I've used XUnit and Moq, however I mostly used an InMemory databse context and didn't use the Moqing framework in the end. 
+The API has been written using .Net Core 3.1. I did consider .Net 5 but as this is fairly new and I've only just started using it, I decided to play it safe. I've used Entity Framework Core for data access and also Swagger for easy API documenting and testing. Swagger is also the tool to use to generate the Serial mumbers and View Prize Entries. For unit testing I've used XUnit and Moq, however I mostly used an InMemory database context and didn't use the Moqing framework in the end. 
 
 ### Project Setup
 
@@ -14,21 +14,21 @@ The Solution contains two projects; one for the API and the other for Unit Tests
 
 ### Dependency Injection
 
-I've used the built in Dependency Injection in .NET Core to inject services and DB Context into the controlers. The controllers themselves are lightweight with all the logic in the services for loose coupling and reusability.
+I've used the built in Dependency Injection in .NET Core to inject services and DB Context into the controllers. The controllers themselves are lightweight with all the logic in the services for loose coupling and reusability.
 
 ### Nuget Packages
 
-Nuget should automatically restore all packages when frist loading the solution. However, if this doesn't happen please right click on the solution in the solution explorer and select the restore Nuget packages otion from the context menu.
+Nuget should automatically restore all packages when frist loading the solution. However, if this doesn't happen please right click on the solution in the solution explorer and select the restore Nuget packages option from the context menu.
 
 ### Datbase
 
-The Database itself is self installing and will create the DB and all nessacary tables when the API runs for the first time, all you'll need to do is check the connection string in the appSettings.json file to make sure the default connection string points to an available SQL server.
+The Database itself is self installing and will create the DB and all necessary tables when the API runs for the first time, all you'll need to do is check the connection string in the appSettings.json file to make sure the default connection string points to an available SQL server.
 
 ### Running the Solution
 
 To run the solution simply hit run in the toolbar at the top of Visual Studio. You can then use the Swagger interface (which is set to the dewfault page) to generate the serial numbers using the SerialNumber/GenerateSerialNumberRange API Method. The serial numbers expire after 10 minutes, I've set this to a low number initially so you can see the UI response when submitting an expired Serial Number. If you'd like to change this, there's a setting in the appSettings.json file called "SerialNumberExpiryMilliseconds" which can be changed. Once you have a valid serial number you can then use this on the UI to submit a Prize entry.
 
-When you have some prize entries submitted via the UI or alternatively directly through the swagger interface using the /PrizeDraw/SubmitEntry API method, you can then use the swagger interface to view all prize entries using the /PrizeDraw/GetAllEntries
+When you have some prize entries submitted via the UI or alternatively directly through the swagger interface using the /PrizeDraw/SubmitEntry API method, you can then use the swagger interface to view all prize entries using the /PrizeDraw/GetAllEntries.
 
 ## User Interface
 
@@ -48,9 +48,9 @@ To run the site you'll then need to run the command
 
     'npm run serve'
 
-The server should host the site on http://localhost:8080 which can be enetered into any browser.
+The server should host the site on http://localhost:8080 which can be entered into any browser.
 
-The UI will instantly try and connect to the API to get config information so insure the API is running first. Alternatively refresh the page to initialise the site.
+The UI will instantly try and connect to the API to get config information so ensure the API is running first. Alternatively refresh the page to initialise the site.
 
 
 
