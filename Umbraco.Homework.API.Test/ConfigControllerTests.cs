@@ -55,7 +55,7 @@ namespace Umbraco.Homework.API.Test
         {
             IConfiguration configuration = base.GetConfiguration(new Dictionary<string, string>
             {
-                { "MaxAllowedPrizeDrawEntries", "2" }
+                { "MaxEntries", "2" }
             });
 
             ConfigController controller = new ConfigController(configuration);

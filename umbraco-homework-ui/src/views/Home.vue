@@ -78,7 +78,6 @@ export default {
         return this.error != null
       },
       displaySpinner() {
-
         return this.formState === FormState.SENDING | FormState.INITIAL;
       },
       displayConfirmation(){

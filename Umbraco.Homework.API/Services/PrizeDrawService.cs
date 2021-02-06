@@ -34,7 +34,7 @@ namespace Umbraco.Homework.API.Services
         {
             _ = userInput ?? throw new NullReferenceException($"{nameof(PrizeDrawEntrySubmission)} must not be null");
 
-            (Boolean isValid, IEnumerable<String> errors) validationResult = this.ValidateUserInput(userInput);
+            (Boolean isValid, IEnumerable<String> errors) validationResult = await this.ValidateUserInputAsync(userInput);
 
             if (!validationResult.isValid)
             {
@@ -64,7 +64,7 @@ namespace Umbraco.Homework.API.Services
         // ----------------------------------------------------
 
         // TODO: Async this!!
-        private (Boolean, IEnumerable<String>) ValidateUserInput(PrizeDrawEntrySubmission entry)
+        private async Task<(Boolean, IEnumerable<String>)> ValidateUserInputAsync(PrizeDrawEntrySubmission entry)
         {
             List<String> errors = new List<String>();
 
@@ -76,10 +76,16 @@ namespace Umbraco.Homework.API.Services
             {
                 PrizeDrawValidation validation = ValidationHelper.GetValidation(this._configuration);
 
-                (Boolean valid, IEnumerable<String> errors) firstNameValidationResults = this.ValidateField(validation.FirstNameRules, entry.FirstName);
-                (Boolean valid, IEnumerable<String> errors) lastNameValidationResults = this.ValidateField(validation.LastNameRules, entry.LastName);
-                (Boolean valid, IEnumerable<String> errors) emailValidationResults = this.ValidateField(validation.EmailRules, entry.Email);
-                (Boolean valid, IEnumerable<String> errors) serailNumberValidationResults = this.ValidateField(validation.SerialNumberRules, entry.SerialNumber);
+                // TODO: Convert this to a loop and use List<Task<...>> and await Task.WhenAll();
+                Task<(Boolean valid, IEnumerable<String> errors)> firstNameValidationResultsTask = this.ValidateFieldAsync(validation.FirstNameRules, entry.FirstName);
+                Task<(Boolean valid, IEnumerable<String> errors)> lastNameValidationResultsTask= this.ValidateFieldAsync(validation.LastNameRules, entry.LastName);
+                Task<(Boolean valid, IEnumerable<String> errors)> emailValidationResultsTask = this.ValidateFieldAsync(validation.EmailRules, entry.Email);
+                Task<(Boolean valid, IEnumerable<String> errors)> serailNumberValidationResultsTask = this.ValidateFieldAsync(validation.SerialNumberRules, entry.SerialNumber);
+
+                (Boolean valid, IEnumerable<String> errors) firstNameValidationResults = await firstNameValidationResultsTask;
+                (Boolean valid, IEnumerable<String> errors) lastNameValidationResults = await lastNameValidationResultsTask;
+                (Boolean valid, IEnumerable<String> errors) emailValidationResults = await emailValidationResultsTask;
+                (Boolean valid, IEnumerable<String> errors) serailNumberValidationResults = await serailNumberValidationResultsTask;
 
                 inputValid = firstNameValidationResults.valid
                     && lastNameValidationResults.valid
@@ -153,6 +159,11 @@ namespace Umbraco.Homework.API.Services
             return age >= this.MinAge;
         }
 
+        private async Task<(Boolean, IEnumerable<String>)> ValidateFieldAsync(IEnumerable<ValidationRule> rules, String value)
+        {
+            return await Task.Run(() => ValidateField(rules, value));
+        }
+
         private (Boolean, IEnumerable<String>) ValidateField(IEnumerable<ValidationRule> rules, String value)
         {
             Boolean valid = true;
@@ -164,7 +175,7 @@ namespace Umbraco.Homework.API.Services
 
                 valid = regex.IsMatch(value.ToLower());
 
-                if(valid == false)
+                if (valid == false)
                 {
                     errorMessages.Add(rule.ErrorMessage);
                 }

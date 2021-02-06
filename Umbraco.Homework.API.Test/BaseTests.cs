@@ -25,7 +25,7 @@ namespace Umbraco.Homework.API.Test
             return (T)okResult.Value;
         }
 
-        protected async void GetControllerResultAsync(Func<Task<IActionResult>> controllerAction)
+        protected async Task GetControllerResultAsync(Func<Task<IActionResult>> controllerAction)
         {
             IActionResult test = await controllerAction();
 
@@ -34,7 +34,7 @@ namespace Umbraco.Homework.API.Test
             Assert.Equal(200, okResult.StatusCode);
         }
 
-        protected async void GetControllerResultAsync<T>(Func<T, Task<IActionResult>> controllerAction, T actionParam)
+        protected async Task GetControllerResultAsync<T>(Func<T, Task<IActionResult>> controllerAction, T actionParam)
         {
             IActionResult test = await controllerAction(actionParam);
 
