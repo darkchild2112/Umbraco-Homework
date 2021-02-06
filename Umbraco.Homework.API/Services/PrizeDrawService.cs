@@ -17,6 +17,9 @@ namespace Umbraco.Homework.API.Services
         private readonly ISerialNumberService _serialNumberService;
         private readonly IConfiguration _configuration;
 
+        private Int32 MaxEntries => this._configuration.GetValue<Int32>("MaxEntries");
+        private Int32 MinAge => this._configuration.GetValue<Int32>("MinAge");
+
         public PrizeDrawService(PrizeDrawDbContext dataAccess, ISerialNumberService serialNumberService, IConfiguration configuration):base(dataAccess)
         {
             this._serialNumberService = serialNumberService;
@@ -78,7 +81,10 @@ namespace Umbraco.Homework.API.Services
                 (Boolean valid, IEnumerable<String> errors) emailValidationResults = this.ValidateField(validation.EmailRules, entry.Email);
                 (Boolean valid, IEnumerable<String> errors) serailNumberValidationResults = this.ValidateField(validation.SerialNumberRules, entry.SerialNumber);
 
-                inputValid = firstNameValidationResults.valid && lastNameValidationResults.valid && emailValidationResults.valid && serailNumberValidationResults.valid;
+                inputValid = firstNameValidationResults.valid
+                    && lastNameValidationResults.valid
+                    && emailValidationResults.valid
+                    && serailNumberValidationResults.valid;
 
                 if (inputValid == false)
                 {
@@ -101,24 +107,50 @@ namespace Umbraco.Homework.API.Services
                 errors.Add("Serial Number is no longer valid");
             }
 
+            Boolean oldEnough = ValidateAge(entry.DateOfBirth);
 
-            // Not the prettiest :(
-            Int32 age = DateTime.Now.Year - entry.DateOfBirth.Year;
+            if (!oldEnough)
+            {
+                errors.Add($"Not old enough sorry. min age is {this.MinAge}");
+            }
 
-            if (entry.DateOfBirth > DateTime.Now.AddYears(-age))
+            Boolean nEntriesValid = this.validateNumberOfEntries(entry.Email);
+
+            if (!nEntriesValid)
+            {
+                errors.Add($"The maximum number of entries per email address is {this.MaxEntries}");
+            }
+
+            return (inputValid
+                && isValidSerialNumber.HasValue
+                && isValidSerialNumber.Value
+                && oldEnough
+                && nEntriesValid,
+                errors);
+        }
+
+        private Boolean validateNumberOfEntries(String email)
+        {
+            var entries = from e
+                          in this._dataAccess.PrizeDrawEntries
+                          where e.Email == email
+                          select e;
+
+            Int32 entrie = entries.Count();
+
+            return entries.Count() <= this.MaxEntries;
+        }
+
+        private Boolean ValidateAge(DateTime dateOfBirth)
+        {
+            Int32 age = DateTime.Now.Year - dateOfBirth.Year;
+
+            if (dateOfBirth > DateTime.Now.AddYears(-age))
             {
                 age--;
             }
 
-            // Todo: move this to a config file
-            Boolean oldEnough = age >= 18;
-
-            if (!oldEnough)
-            {
-                errors.Add("Not old enough sorry. min age is 18");
-            }
-
-            return (inputValid && isValidSerialNumber.HasValue && isValidSerialNumber.Value && oldEnough, errors);
+            return age >= this.MinAge;
         }
 
         private (Boolean, IEnumerable<String>) ValidateField(IEnumerable<ValidationRule> rules, String value)

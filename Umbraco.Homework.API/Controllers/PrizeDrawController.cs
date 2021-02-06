@@ -43,7 +43,7 @@ namespace Umbraco.Homework.API.Controllers
             }
             catch(InvalidUserInputException ex)
             {
-                return BadRequest(new JsonResult(new { Message = "Invalid User Input", Errors = ex.Errors }));
+                return BadRequest(new JsonResult(new { Message = "Looks like there's a problem!", Errors = ex.Errors }));
             }
         }
     }

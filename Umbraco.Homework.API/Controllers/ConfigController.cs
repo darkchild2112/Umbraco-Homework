@@ -27,7 +27,7 @@ namespace Umbraco.Homework.API.Controllers
         {
             return Ok(new Config
             {
-                MaxSubmissions = this._configuration.GetValue<Int32>("MaxAllowedPrizeDrawEntries"),
+                MaxSubmissions = this._configuration.GetValue<Int32>("MaxEntries"),
                 Validation = ValidationHelper.GetValidation(this._configuration)
             });
         }

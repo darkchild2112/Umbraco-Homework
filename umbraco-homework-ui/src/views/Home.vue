@@ -19,10 +19,10 @@
 
         <div v-if="displayConfirmation" class="text-center">
           <h2>Entry Successful</h2>
-          <p>Thank you for submitting the form</p>
+          <p>Thank you for entering our prize draw </p>
           <template v-if="submissions < config.maxSubmissions">
-            <p>You can enter the prize draw a maximum number of {{ config.maxSubmissions }} times. Would you like to try again?</p>
-            <Button v-on:click="tryAgain" :text="'Submit Entry'" />
+            <p>You can enter the prize draw a maximum number of {{ config.maxSubmissions }} times for every valid serial number that you have. Would you like to enter again?</p>
+            <Button v-on:click="tryAgain" :text="'New Entry'" />
           </template>
         </div>
       </Container>
@@ -58,7 +58,7 @@ export default {
   data() {
     return {
         submissions: 0,
-        formState: FormState.INITIAL,
+        formState: null,
         config: null,
         validationRules: {
           firstNameRules: null,
@@ -72,13 +72,14 @@ export default {
   },
   computed: {
       displayForm(){
-        return this.formState === FormState.INITIAL;
+        return this.formState === FormState.READY;
       },
       displayError() {
         return this.error != null
       },
       displaySpinner() {
-        return this.formState === FormState.SENDING;
+
+        return this.formState === FormState.SENDING | FormState.INITIAL;
       },
       displayConfirmation(){
         return this.formState === FormState.SUBMITTED;
@@ -88,7 +89,7 @@ export default {
 
       successfulPrizeDrawSubmit(entry) {
 
-        this.formState = FormState.SENDING;
+        this.setFormState(FormState.SENDING);
         this.error = null;
 
         dataAccess.post('/PrizeDraw/SubmitEntry', entry)
@@ -97,7 +98,7 @@ export default {
             console.log('Success:', response);
 
             this.submissions = this.submissions += 1;
-            this.formState = FormState.SUBMITTED;
+            this.setFormState(FormState.SUBMITTED);
 
             console.log('prize draw successfully submitted');
             console.log(`successfully submitted ${this.submissions} times`);
@@ -116,13 +117,18 @@ export default {
               this.error = error;
             }
 
-            this.formState = FormState.INITIAL;
+            this.setFormState(FormState.READY);
           });
       },
 
       tryAgain()
       {
-        this.formState = FormState.INITIAL;
+        this.setFormState(FormState.READY);
+      },
+      setFormState(formState){
+
+        console.log(formState);
+        this.formState = formState;
       }
   },
   beforeCreate(){
@@ -130,14 +136,10 @@ export default {
       dataAccess.get('/Config')
         .then(response => {
 
-          console.log(response);
-
           this.config = response.data;
           this.validationRules = response.data.validation;
 
-          console.log(FormState.INITIAL);
-
-
+          this.setFormState(FormState.READY);
         })
         .catch(err => {
           
@@ -146,11 +148,12 @@ export default {
                 errors: null
               }
               
-              this.error = error;
+          this.error = error;
 
-          console.log(err)}
-          
-        );
+          this.setFormState(FormState.HIDDEN);
+
+          console.log(err);
+        });
   }
 }
 

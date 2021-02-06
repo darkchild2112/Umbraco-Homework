@@ -78,7 +78,7 @@ namespace Umbraco.Homework.API.Test
             IConfiguration config = GetConfiguration(
                 new Dictionary<string, string>{
                     { "SerialNumberExpiryMilliseconds", expiry.ToString() },
-                    { "MaxAllowedPrizeDrawEntries", "2" }
+                    { "MaxSerialNumberUses", "2" }
                 });
 
             var optionsBuilder = new DbContextOptionsBuilder<PrizeDrawDbContext>();

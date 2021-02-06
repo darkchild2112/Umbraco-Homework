@@ -11,7 +11,7 @@ namespace Umbraco.Homework.API.Services
 {
     public class SerialNumberService : ServiceBase, ISerialNumberService
     {
-        private Int32 MaxUses => this._configuration.GetValue<Int32>("MaxAllowedPrizeDrawEntries", 1);
+        private Int32 MaxUses => this._configuration.GetValue<Int32>("MaxSerialNumberUses", 1);
 
         private Int32 ExpiryMilliseconds => this._configuration.GetValue<Int32>("SerialNumberExpiryMilliseconds", 100000); 
 
