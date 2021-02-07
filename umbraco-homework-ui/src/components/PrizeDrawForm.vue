@@ -3,7 +3,7 @@
 
         <div class="form-row">
             <div class="form-group col-md-6">
-                <Input type="text" v-model="firstName" ph="First t Name..." id="firstName" label="First Name" :validationRules="validationRules.firstNameRules" />
+                <Input type="text" v-model="firstName" ph="First Name..." id="firstName" label="First Name" :validationRules="validationRules.firstNameRules" />
             </div>
             <div class="form-group col-md-6">
                 <Input type="text" v-model="lastName" id="lastName" ph="Last Name..." label="Last Name" :validationRules="validationRules.lastNameRules"/>
@@ -39,7 +39,9 @@ import moment from 'moment';
 
 export default {
     name: "PrizeDrawForm",
-    props: ['validationRules'],
+    props: {
+        validationRules: Object
+    },
     components: { Input, Button },
     data() {
 
@@ -64,8 +66,6 @@ export default {
 
             if(this.formIsValid === true)
             {
-                //const dob = Date.parse(this.dateOfBirth.value.split("/").reverse().join("-"));
-
                 const dob = moment(`${this.dateOfBirth.value} 01:01:01`, 'DD/MM/YYYY hh:mm:ss');
 
                 console.log(dob);

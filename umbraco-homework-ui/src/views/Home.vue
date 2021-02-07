@@ -13,7 +13,7 @@
         <PrizeDrawForm 
           v-if="displayForm" 
           v-bind:validationRules="this.validationRules"
-          v-on:successfulSubmit="successfulPrizeDrawSubmit"/>
+          v-on:successfulSubmit="successfulPrizeDrawSubmit" />
 
         <Spinner v-if="displaySpinner"/>
 
