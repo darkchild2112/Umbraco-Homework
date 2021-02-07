@@ -4,7 +4,7 @@ There's fundamentally two parts to the application, a .Net Core API and then a s
 
 ## The API
 
-The API has been written using .Net Core 3.1. I did consider .Net 5 but as this is fairly new and I've only just started using it, I decided to play it safe. I've used Entity Framework Core for data access and also Swagger for easy API documenting and testing. Swagger is also the tool used to generate the Serial mumbers and view prize entries. For unit testing I've used XUnit and Moq, however I mostly used an InMemory database context and didn't use the Moqing framework in the end, but I was sure I would in future enhancements. 
+The API has been written using .Net Core 3.1. I did consider .Net 5 but as this is fairly new and I've only just started using it, I decided to play it safe. I've used Entity Framework Core for data access and also Swagger for easy API documenting and testing. Swagger is also the tool used to generate the Serial numbers and view prize entries. For unit testing I've used XUnit and Moq, however I mostly used an InMemory database context and didn't use the Moqing framework in the end, but I was sure I would in future enhancements. 
 
 ### Project Setup
 
@@ -30,7 +30,7 @@ When you have some prize entries submitted via the UI or alternatively directly 
 
 ## User Interface
 
-The user interface has been written using the VueJs CLI and Visual Studio Code. It uses Boostrap for styling and Responsive layout. I have also used some third party plugins via npm such as moment JS for date object creation and axios for communicating with the API.
+The user interface has been written using the VueJs CLI and Visual Studio Code. It uses Bootstrap for styling and Responsive layout. I have also used some third party plugins via npm such as moment JS for date object creation and axios for communicating with the API.
 
 ### Requirements
 
