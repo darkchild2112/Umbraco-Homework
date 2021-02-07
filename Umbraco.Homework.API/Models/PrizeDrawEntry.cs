@@ -9,7 +9,7 @@ namespace Umbraco.Homework.API.Models
         public Int32 Id { get; set; }
 
         [Required]
-        // Otherwise all string are created as nvarchar(max)
+        // Otherwise db strings are created as nvarchar(max)
         [MaxLength(200)] 
         public String FirstName { get; set; }
 

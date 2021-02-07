@@ -1,4 +1,5 @@
 ﻿using System;
+
 namespace Umbraco.Homework.API.Models
 {
     public class PrizeDrawEntrySubmission

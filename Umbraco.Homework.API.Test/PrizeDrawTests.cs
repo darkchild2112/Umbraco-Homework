@@ -55,7 +55,7 @@ namespace Umbraco.Homework.API.Test
 
             Assert.NotNull(controller);
 
-            IEnumerable<SerialNumber> serialNumbers = await serialNumberService.GenerateSerialNumberRange(1);
+            IEnumerable<SerialNumber> serialNumbers = await serialNumberService.GenerateSerialNumberRangeAsync(1);
 
             await base.GetControllerResultAsync(controller.SubmitEntry, new PrizeDrawEntrySubmission
             {

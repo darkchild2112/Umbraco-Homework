@@ -14,7 +14,7 @@ namespace Umbraco.Homework.API.Services
             this._dataAccess = dataAccess;
         }
 
-        protected async Task<Boolean> Save()
+        protected async Task Save()
         {
             try
             {
@@ -27,8 +27,6 @@ namespace Umbraco.Homework.API.Services
                 throw;
                 // or return false???
             }
-
-            return true;
         }
     }
 }

@@ -32,10 +32,17 @@ namespace Umbraco.Homework.API.Controllers
         {
             if(howMany < 1)
             {
-                return Ok("The number of serial numbers to create must be more than 0");
+                return BadRequest("The number of serial numbers to create must be more than 0");
             }
 
-            return Ok(await this._serialNumberService.GenerateSerialNumberRange(howMany));
+            if(howMany > 1000)
+            {
+                // Swagger hangs with large Json objects :(
+                //https://github.com/swagger-api/swagger-ui/issues/3832
+                return BadRequest("The number of serial numbers to create is limited to no more than 1000 at a time");
+            }
+
+            return Ok(await this._serialNumberService.GenerateSerialNumberRangeAsync(howMany));
         }
     }
 }

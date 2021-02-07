@@ -30,7 +30,7 @@ namespace Umbraco.Homework.API.Services
             => base._dataAccess.PrizeDrawEntries
             .AsNoTracking();
 
-        public async Task<PrizeDrawEntry> SubmitEntry(PrizeDrawEntrySubmission userInput)
+        public async Task<PrizeDrawEntry> SubmitEntryAsync(PrizeDrawEntrySubmission userInput)
         {
             _ = userInput ?? throw new NullReferenceException($"{nameof(PrizeDrawEntrySubmission)} must not be null");
 
@@ -63,7 +63,7 @@ namespace Umbraco.Homework.API.Services
 
         // ----------------------------------------------------
 
-        // TODO: Async this!!
+        // TODO: Cancellation Token
         private async Task<(Boolean, IEnumerable<String>)> ValidateUserInputAsync(PrizeDrawEntrySubmission entry)
         {
             List<String> errors = new List<String>();
@@ -110,14 +110,14 @@ namespace Umbraco.Homework.API.Services
 
             if (isValidSerialNumber.HasValue && isValidSerialNumber.Value == false)
             {
-                errors.Add("Serial Number is no longer valid");
+                errors.Add("The Serial Number used is no longer valid");
             }
 
             Boolean oldEnough = ValidateAge(entry.DateOfBirth);
 
             if (!oldEnough)
             {
-                errors.Add($"Not old enough sorry. min age is {this.MinAge}");
+                errors.Add($"The minimum age for prize draw entries is {this.MinAge}");
             }
 
             Boolean nEntriesValid = this.validateNumberOfEntries(entry.Email);

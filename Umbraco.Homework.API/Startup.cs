@@ -20,6 +20,8 @@ namespace Umbraco.Homework.API
 {
     public class Startup
     {
+        private const String API_NAME = "Acme Corporation Prize Draw API";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -33,7 +35,7 @@ namespace Umbraco.Homework.API
 
             services.AddSwaggerGen(swagger =>
             {
-                swagger.SwaggerDoc("v1", new OpenApiInfo { Title = "Umbraco Homework API" });
+                swagger.SwaggerDoc("v1", new OpenApiInfo { Title = API_NAME });
             });
 
             services.AddDbContext<PrizeDrawDbContext>(options =>
@@ -67,7 +69,7 @@ namespace Umbraco.Homework.API
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Umbraco Homework API");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", API_NAME);
             });
 
             app.UseEndpoints(endpoints =>
@@ -75,7 +77,8 @@ namespace Umbraco.Homework.API
                 endpoints.MapControllers();
             });
 
-            // Wouldn't use this for production but it's nice for prototypes and demos
+            // Generate the DB on Startup (if not there already)
+            // Wouldn't use this for production, but it's nice for prototypes and demos
             using (var serviceScope = app.ApplicationServices.CreateScope())
             {
                 var context = serviceScope.ServiceProvider.GetService<PrizeDrawDbContext>();
