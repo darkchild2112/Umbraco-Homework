@@ -3,25 +3,25 @@
 
         <div class="form-row">
             <div class="form-group col-md-6">
-                <Input type="text" v-model="firstName" ph="First Name..." id="firstName" label="First Name" :validationRules="validationRules.firstNameRules" />
+                <Input type="text" v-model="firstName" ph="First Name..." id="firstName" label="First Name:" :validationRules="validationRules.firstNameRules" />
             </div>
             <div class="form-group col-md-6">
-                <Input type="text" v-model="lastName" id="lastName" ph="Last Name..." label="Last Name" :validationRules="validationRules.lastNameRules"/>
+                <Input type="text" v-model="lastName" id="lastName" ph="Last Name..." label="Last Name:" :validationRules="validationRules.lastNameRules"/>
             </div>
         </div>
 
         <div class="form-row">
             <div class="form-group col-md-6">
-                <Input type="text" v-model="dateOfBirth" ph="Date of Birth (mm/dd/yyyy)" id="dateOfBirth" label="Date of Birth" :validationRules="validationRules.dateOfBirthRules" />
+                <Input type="text" v-model="dateOfBirth" ph="Date of Birth (mm/dd/yyyy)" id="dateOfBirth" label="Date of Birth:" :validationRules="validationRules.dateOfBirthRules" />
             </div>
             <div class="form-group col-md-6">
-                <Input type="text" v-model="email" id="email" ph="Email..." label="Email" :validationRules="validationRules.emailRules"/>
+                <Input type="text" v-model="email" id="email" ph="Email..." label="Email:" :validationRules="validationRules.emailRules"/>
             </div>
         </div>
 
         <div class="form-row">
             <div class="form-group col-md-12">
-                <Input type="text" v-model="serialNumber" id="serialNumber" ph="Serial Number..." label="Serial Number" :validationRules="validationRules.serialNumberRules"/>
+                <Input type="text" v-model="serialNumber" id="serialNumber" ph="Serial Number..." label="Serial Number:" :validationRules="validationRules.serialNumberRules"/>
             </div>
         </div>
         
@@ -67,8 +67,6 @@ export default {
             if(this.formIsValid === true)
             {
                 const dob = moment(`${this.dateOfBirth.value} 01:01:01`, 'DD/MM/YYYY hh:mm:ss');
-
-                console.log(dob);
 
                 const newPDrawSub = {
 

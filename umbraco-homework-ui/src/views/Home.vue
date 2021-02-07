@@ -19,7 +19,7 @@
 
         <div v-if="displayConfirmation" class="text-center">
           <h2>Entry Successful</h2>
-          <p>Thank you for entering our prize draw </p>
+          <p>Thank you for entering the Acme Corporation prize draw</p>
           <template v-if="submissions < config.maxSubmissions">
             <p>You can enter the prize draw a maximum number of {{ config.maxSubmissions }} times for every valid serial number that you have. Would you like to enter again?</p>
             <Button v-on:click="tryAgain" :text="'New Entry'" />
@@ -92,19 +92,13 @@ export default {
         this.error = null;
 
         dataAccess.post('/PrizeDraw/SubmitEntry', entry)
-          .then(response => {
-
-            console.log('Success:', response);
+          .then(() => {
 
             this.submissions = this.submissions += 1;
             this.setFormState(FormState.SUBMITTED);
 
-            console.log('prize draw successfully submitted');
-            console.log(`successfully submitted ${this.submissions} times`);
-            console.log(entry);
           })
           .catch(err => { 
-            console.log(err.response);
             
             if(err.response.status === 400)
             {
@@ -126,7 +120,6 @@ export default {
       },
       setFormState(formState){
 
-        console.log(formState);
         this.formState = formState;
       }
   },
@@ -140,18 +133,16 @@ export default {
 
           this.setFormState(FormState.READY);
         })
-        .catch(err => {
+        .catch(() => {
           
           const error = { 
-                summary: "Error Contacting the API - Please refresh the page to try again",
+                summary: "Error connecting to the API. Please refresh the page to try again",
                 errors: null
               }
               
           this.error = error;
 
           this.setFormState(FormState.HIDDEN);
-
-          console.log(err);
         });
   }
 }
