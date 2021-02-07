@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
+﻿using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Umbraco.Homework.API.Controllers;
@@ -9,8 +7,6 @@ using Umbraco.Homework.API.Models;
 using Umbraco.Homework.API.Services;
 using Xunit;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Umbraco.Homework.API.Test
 {
