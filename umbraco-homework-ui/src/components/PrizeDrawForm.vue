@@ -1,5 +1,5 @@
 <template>
-    <form @submit="submitEntry">
+    <form @submit.prevent="submitEntry">
 
         <div class="form-row">
             <div class="form-group col-md-6">
@@ -25,8 +25,6 @@
             </div>
         </div>
         
-        
-
         <Button :text="'Submit Entry'" :enabled="!formIsValid" />
     </form>
 </template>
@@ -60,9 +58,7 @@ export default {
     },
     methods: {
 
-        submitEntry(e) {
-
-            e.preventDefault();
+        submitEntry() {
 
             if(this.formIsValid === true)
             {
@@ -88,7 +84,3 @@ export default {
     }
 }
 </script>
-
-<style scoped>
-
-</style>

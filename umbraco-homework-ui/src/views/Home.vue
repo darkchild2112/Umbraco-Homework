@@ -11,7 +11,7 @@
         <ErrorAlert v-if="displayError" :error="error" />
 
         <PrizeDrawForm 
-          v-if="displayForm" 
+          v-show="displayForm" 
           v-bind:validationRules="this.validationRules"
           v-on:successfulSubmit="successfulPrizeDrawSubmit" />
 
@@ -41,9 +41,10 @@ import ErrorAlert from '@/components/UI/ErrorAlert'
 
 import Button from '@/components/UI/Button'
 
-import dataAccess from '@/axios-base';
-
 import FormState from '@/models/FormState';
+
+import { submitPrizeDrawEntry } from '../services/PrizeDrawService';
+import { getConfig } from '../services/ConfigService';
 
 export default {
   name: 'Home',
@@ -86,32 +87,34 @@ export default {
   },
   methods: {
 
-      successfulPrizeDrawSubmit(entry) {
+      async successfulPrizeDrawSubmit(entry) {
 
         this.setFormState(FormState.SENDING);
         this.error = null;
 
-        dataAccess.post('/PrizeDraw/SubmitEntry', entry)
-          .then(() => {
+        try {
+
+            const response = await submitPrizeDrawEntry(entry);
+
+            console.log(response);
 
             this.submissions = this.submissions += 1;
             this.setFormState(FormState.SUBMITTED);
 
-          })
-          .catch(err => { 
-            
-            if(err.response.status === 400)
-            {
+        } catch(err) {
+
+          if(err.response.status === 400)
+          {
               const error = { 
                 summary: err.response.data.value.message,
                 errors: err.response.data.value.errors
               }
               
               this.error = error;
-            }
+          }
 
-            this.setFormState(FormState.READY);
-          });
+          this.setFormState(FormState.READY);
+        }
       },
 
       tryAgain()
@@ -123,27 +126,28 @@ export default {
         this.formState = formState;
       }
   },
-  beforeCreate(){
+  async beforeCreate(){
       
-      dataAccess.get('/Config')
-        .then(response => {
+      try {
 
-          this.config = response.data;
-          this.validationRules = response.data.validation;
+        const response = await getConfig();
 
-          this.setFormState(FormState.READY);
-        })
-        .catch(() => {
-          
-          const error = { 
-                summary: "Error connecting to the API. Please refresh the page to try again",
-                errors: null
-              }
+        this.config = response.data;
+        this.validationRules = response.data.validation;
+
+        this.setFormState(FormState.READY);
+      }
+      catch {
+
+        const error = { 
+          summary: "Error connecting to the API. Please refresh the page to try again",
+          errors: null
+        }
               
-          this.error = error;
+        this.error = error;
 
-          this.setFormState(FormState.HIDDEN);
-        });
+        this.setFormState(FormState.HIDDEN);
+      }
   }
 }
 
